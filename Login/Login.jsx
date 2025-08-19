@@ -1,45 +1,59 @@
-import React from 'react'
+import React from "react";
+import { PiChefHatFill } from "react-icons/pi";
+import { GiForkKnifeSpoon } from "react-icons/gi";
+// import { FaConciergeBell } from " react-icons/pi"
 
 const Login = () => {
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm sm:max-w-md lg:max-w-lg">
-                <h1 className="text-center text-2xl font-semibold mb-6">Login</h1>
+  const cards = [
+    {
+      icon: <GiForkKnifeSpoon />,
+      title: "Quality Food",
+    },
+    {
+      icon: <PiChefHatFill />,
 
-                <form className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>
+      title: "Classical taste",
+    },
+    {
+      icon: <PiChefHatFill />,
+      title: "Skilled chef",
+    },
+    {
+      icon: <PiChefHatFill />,
+      title: "Best service",
+    },
+  ];
 
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Password</label>
-                        <input
-                            type="password"
-                            placeholder="Enter your password"
-                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>
+  return (
+    <section className="py-12 bg-[#F5F9F4]">
+      <div className="max-w-6xl mx-auto px-4 flex flex-col lg:flex-row gap-8">
 
-                    <button
-                        type="submit"
-                        className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                    >
-                        Login
-                    </button>
-                </form>
-
-                <p className="text-center text-sm mt-4">
-                    Don’t have an account?
-                    <span className="text-blue-600 hover:underline cursor-pointer"> Sign up</span>
-                </p>
-            </div>
+        {/* Left Content */}
+        <div className="lg:w-1/2">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Why Choose Our Food
+          </h2>
+          <p className="text-gray-600 leading-relaxed">
+            Quality of Service, Food, Ambiance, and Value of Money are the
+            primary elements for choosing a restaurant. Shaif’s Cuisine is one
+            of the most exquisite fine-dinning restaurant in Chittagong cities
+            with a captivating view of GEC Hills, perfect ambiance, and
+            scrumptious food.
+          </p>
         </div>
-    )
-}
 
-export default Login
+        {/* Right Icons Grid */}
+        <div className="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {cards.map((card) => (
+            <div className="p-6 bg-white rounded-xl shadow-md flex flex-col items-center text-center hover:shadow-2xl">
+              <div className="h-10 w-10 mb-4">{card.icon}</div>
+              <h4 className="font-medium">{card.title}</h4>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Login;
