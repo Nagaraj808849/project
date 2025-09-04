@@ -7,6 +7,7 @@ import Signup from '../Login/Signup'
 import Frontpage from '../Home/Frontpage'
 import HomePage2 from '../Home/HomePage2'
 import { BrowserRouter as Router,Routes,Route } from 'react-router'
+import Menu1 from '../Menu/Menu1'
 
 // import HomePage2 from '../Home/HomePage2'
 
@@ -20,17 +21,20 @@ function App() {
      
        {/* <HomePage2/> */}
          
-          <Router>
+          {/* <Router>
         <Routes>
           <Route path='/' element={<Frontpage/>}/>
-          <Route path='/Login' element={<Login/>
-}/>
+          <Route path='/Login' element={<Login/>}/>
+          <Route path='/Signup' element={<Signup/>}/>
          
 
 
 
-        </Routes>
-      </Router>
+        </Routes> */}
+      {/* </Router> */}
+      <Menu1/>
+      {/* <Signup/>
+      <Menu1/> */}
    
       
      
