@@ -5,11 +5,18 @@ import './App.css'
 import Login from '../Login/Login'
 import Signup from '../Login/Signup'
 import Frontpage from '../Home/Frontpage'
-import HomePage2 from '../Home/HomePage2'
+import HomePage1 from '../Home/HomePage1'
 import { BrowserRouter as Router,Routes,Route } from 'react-router'
-import Menu1 from '../Menu/Menu1'
 
-// import HomePage2 from '../Home/HomePage2'
+import HomePage2 from '../Home/HomePage2'
+// import LandingPage from '../Home/HomePage1'
+
+import PortfolioLanding from '../Home/HomePage3'
+import TableOrder from '../TableOrder/TableOrdering.jsx'
+import PaymentPage from '../Payment/PaymentDetails.jsx'
+import UserDash from '../UserDash/UserDash.jsx'
+import Admin from '../AbminDash/Admin.jsx'
+// import Dashboard from '../AbminDash/Admin.jsx'
 
 
 function App() {
@@ -19,9 +26,9 @@ function App() {
     <>
       <div>
      
-       {/* <HomePage2/> */}
+   
          
-          {/* <Router>
+           {/* <Router>
         <Routes>
           <Route path='/' element={<Frontpage/>}/>
           <Route path='/Login' element={<Login/>}/>
@@ -30,11 +37,19 @@ function App() {
 
 
 
-        </Routes> */}
-      {/* </Router> */}
-      <Menu1/>
-      {/* <Signup/>
-      <Menu1/> */}
+        </Routes> 
+      </Router>  */}
+       {/* <HomePage1/>
+       <HomePage2/> */}
+ {/* <TableOrder/> */}
+ {/* <PaymentPage/> */}
+ {/* <Dashboard/> */}
+ {/* <TableOrder/> */}
+
+          {/* <PortfolioLanding/> */}
+          {/* <UserDash/> */}
+          <Admin/>
+       
    
       
      

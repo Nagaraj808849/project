@@ -1,45 +1,59 @@
-import React from 'react'
-import HomePage3 from './HomePage3'
+import React from "react";
+import { PiChefHatFill } from "react-icons/pi";
+import { GiForkKnifeSpoon } from "react-icons/gi";
+// import { FaConciergeBell } from " react-icons/pi"
 
+const Home2 = () => {
+  const cards = [
+    {
+      icon: <GiForkKnifeSpoon />,
+      title: "Quality Food",
+    },
+    {
+      icon: <PiChefHatFill />,
 
-const HomePage2 = () => {
+      title: "Classical taste",
+    },
+    {
+      icon: <PiChefHatFill />,
+      title: "Skilled chef",
+    },
+    {
+      icon: <PiChefHatFill />,
+      title: "Best service",
+    },
+  ];
+
   return (
-    <div>
-    <div className='w-[100vw] h-[100vh] bg-gray-400 '>
-<header className="flex justify-between items-center w-[100vw] px-6 py-4 shadow-2xl bg-red-500 fixed " >
-        <div className="flex items-center gap-3 ">
-          <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center hover:scale-110 transition">
-            logo
-          </div>
-          <h1 className="text-3xl font-bold">Restaurant Name</h1>
+    <section className="py-12 bg-[#F5F9F4]">
+      <div className="max-w-6xl mx-auto px-4 flex flex-col lg:flex-row gap-8 ">
+
+        {/* Left Content */}
+        <div className="lg:w-1/2">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Why Choose Our Food
+          </h2>
+          <p className="text-gray-600 leading-relaxed">
+            Quality of Service, Food, Ambiance, and Value of Money are the
+            primary elements for choosing a restaurant. Shaif’s Cuisine is one
+            of the most exquisite fine-dinning restaurant in Chittagong cities
+            with a captivating view of GEC Hills, perfect ambiance, and
+            scrumptious food.
+          </p>
         </div>
 
-        <nav className="hidden md:flex gap-10">
-          <a href="#home" className="px-4 py-2 rounded-lg hover:bg-blue-200 hover:scale-110 transition font-bold">Home</a>
-          <a href="#menu" className="px-3 py-2 rounded-lg hover:bg-blue-200 hover:scale-110 transition font-bold">Menu</a>
-          <a href="#about" className="px-3 py-2 rounded-lg hover:bg-blue-200 hover:scale-110 transition font-bold">About</a>
-          <a href="#contact" className="px-3 py-2 rounded-lg hover:bg-blue-200 hover:scale-110 transition font-bold">Contact</a>
-          <a href="#login" className="px-3 py-2 border rounded-lg hover:bg-blue-200 hover:scale-110 transition font-bold">Login</a>
-          <a href="#book" className="px-3 py-2 border rounded-lg bg-yellow-400 hover:bg-yellow-500 hover:scale-110 transition font-bold">Book Table</a>
-        </nav>
+        {/* Right Icons Grid */}
+        <div className="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {cards.map((card) => (
+            <div className="p-6 bg-white rounded-xl shadow-md flex flex-col items-center text-center hover:shadow-2xl">
+              <div className="h-10 w-10 mb-4">{card.icon}</div>
+              <h4 className="font-medium">{card.title}</h4>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
-        {/* Mobile Menu (Hamburger) */}
-        <div className="md:hidden text-2xl cursor-pointer">☰</div>
-      </header>
-      
-      
-      
-       </div>
-        <div className='w-[100vw] h-[100vh] bg-amber-500'></div>
-        <div>
-        <HomePage3/>
-       </div>
-       <div className='w-[100vw] h-[100vh] bg-blue-600'>
-
-       </div>
-     
-       </div>
-  )
-}
-
-export default HomePage2
+export default Home2;
