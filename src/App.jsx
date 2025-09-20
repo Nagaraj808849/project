@@ -33,6 +33,8 @@ function App() {
           <Route path='/' element={<Frontpage/>}/>
           <Route path='/Login' element={<Login/>}/>
           <Route path='/Signup' element={<Signup/>}/>
+            <Route path='/Table' element={<TableOrder/>}/>
+
          
 
 
@@ -41,14 +43,14 @@ function App() {
       </Router>  */}
        {/* <HomePage1/>
        <HomePage2/> */}
- {/* <TableOrder/> */}
  {/* <PaymentPage/> */}
  {/* <Dashboard/> */}
- {/* <TableOrder/> */}
+ <TableOrder/>
 
           {/* <PortfolioLanding/> */}
           {/* <UserDash/> */}
-          <Admin/>
+          {/* <Admin/> */}
+          {/* <PaymentPage/> */}
        
    
       

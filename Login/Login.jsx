@@ -21,7 +21,7 @@ const Login = () => {
                 type="text"
                 placeholder="Username"
                 className="w-full py-2 pl-10 pr-4 bg-transparent border-b border-gray-600 focus:outline-none focus:border-cyan-400"
-              />
+             required />
               <FaUser className="absolute left-2 top-3 text-cyan-400" />
             </div>
 
@@ -31,7 +31,7 @@ const Login = () => {
                 type="password"
                 placeholder="Password"
                 className="w-full py-2 pl-10 pr-4 bg-transparent border-b border-gray-600 focus:outline-none focus:border-cyan-400"
-              />
+              required/>
               <FaLock className="absolute left-2 top-3 text-cyan-400" />
             </div>
 
@@ -45,10 +45,9 @@ const Login = () => {
             <p className="mt-4 text-sm text-gray-400">
             Don’t have an account?{" "}
               <Link to="/Signup">
-          <button className="w-[150px] sm:w-[180px] h-[45px] sm:h-[50px]   text-blue-600 font-bold text-base sm:text-lg  flex items-center justify-center gap-2 hover:shadow-2xl hover:bg-black transition-all duration-300">
-            Signup
-          </button>
+          <a href="" className="text-blue-500 ml-[10px] text-[16px]"> signup</a>
         </Link>
+        
           </p>
           </div>
         </div>

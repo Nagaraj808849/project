@@ -27,7 +27,7 @@ const Signup = () => {
                 type="text"
                 placeholder="Username"
                 className="w-full py-2 pl-10 pr-4 bg-transparent border-b border-gray-600 focus:outline-none focus:border-cyan-400"
-              />
+               required/>
               <FaUser className="absolute left-2 top-3 text-gray-400" />
             </div>
 
@@ -37,7 +37,7 @@ const Signup = () => {
                 type="email"
                 placeholder="Email"
                 className="w-full py-2 pl-10 pr-4 bg-transparent border-b border-gray-600 focus:outline-none focus:border-cyan-400"
-              />
+              required/>
               <FaEnvelope className="absolute left-2 top-3 text-gray-400" />
             </div>
 
@@ -47,7 +47,7 @@ const Signup = () => {
                 type="password"
                 placeholder="Password"
                 className="w-full py-2 pl-10 pr-4 bg-transparent border-b border-gray-600 focus:outline-none focus:border-cyan-400"
-              />
+             required />
               <FaLock className="absolute left-2 top-3 text-gray-400" />
             </div>
 

@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import {useForm} from "react-hook-form"
 
 const TableOrder = () => {
   const {register,handleSubmit}=useForm();
+  const {data2,setdata1}=useState([])
+
+  function submit(data)
+  {
+   
+    setdata1(data.username)
+    console.log(data2);
+  }
+ 
   return (
+    
     <div className="w-full min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 flex flex-col items-center py-10 px-4">
       {/* Header */}
       <div className="text-center mb-8">
@@ -16,8 +26,7 @@ const TableOrder = () => {
       </div>
 
       {/* Form */}
-      <form className="w-full max-w-3xl bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-lg" onSubmit={handleSubmit((data)=>
-     console.log(data))}>
+      <form className="w-full max-w-3xl bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-lg" onSubmit={handleSubmit(submit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <input
             className="w-full h-12 px-4 rounded-md bg-white/90 border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
@@ -83,6 +92,7 @@ const TableOrder = () => {
         </div>
       </form>
     </div>
+   
   );
 };
 
