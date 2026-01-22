@@ -12,7 +12,7 @@ const TableOrder = () => {
     console.log(data2);
   }
  
-  return (
+  return (   
     
     <div className="w-full min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 flex flex-col items-center py-10 px-4">
       {/* Header */}

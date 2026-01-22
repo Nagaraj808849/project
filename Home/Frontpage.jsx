@@ -42,7 +42,7 @@ const Frontpage = () => {
           Delicious food with tradition and taste.
         </p>
 
-        <Link to="/Login">
+        <Link to="/Homepage1">
           <button className="w-[150px] sm:w-[180px] h-[45px] sm:h-[50px] border-2 mt-8 sm:mt-12 text-white font-bold text-base sm:text-lg rounded-3xl flex items-center justify-center gap-2 hover:shadow-2xl hover:bg-black transition-all duration-300">
             GET STARTED <FaArrowRightLong size={22}  />
           </button>
