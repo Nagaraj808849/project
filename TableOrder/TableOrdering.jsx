@@ -1,19 +1,16 @@
-import React, { useState } from "react";
-import {useForm} from "react-hook-form"
+import React from "react";
+import { useForm } from "react-hook-form";
 
 const TableOrder = () => {
-  const {register,handleSubmit}=useForm();
-  const {data2,setdata1}=useState([])
+  const { register, handleSubmit, reset } = useForm();
 
-  function submit(data)
-  {
-   
-    setdata1(data.username)
-    console.log(data2);
-  }
- 
-  return (   
-    
+  const submit = (data) => {
+    alert("Table booked successfully! 🎉");
+    console.log(data); // you can use this to send to backend
+    reset(); // clear form after submission
+  };
+
+  return (
     <div className="w-full min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900 flex flex-col items-center py-10 px-4">
       {/* Header */}
       <div className="text-center mb-8">
@@ -26,40 +23,38 @@ const TableOrder = () => {
       </div>
 
       {/* Form */}
-      <form className="w-full max-w-3xl bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-lg" onSubmit={handleSubmit(submit)}>
+      <form
+        className="w-full max-w-3xl bg-gray-800/80 backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-lg"
+        onSubmit={handleSubmit(submit)}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <input
-            className="w-full h-12 px-4 rounded-md bg-white/90 border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
             type="text"
-            {...register("username")}
             placeholder="USER NAME"
             required
+            {...register("username")}
+            className="w-full h-12 px-4 rounded-md bg-white text-black border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
           />
           <input
-            className="w-full h-12 px-4 rounded-md bg-white/90 border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
             type="email"
-           {...register("email")}
-
             placeholder="USER EMAIL"
             required
+            {...register("email")}
+            className="w-full h-12 px-4 rounded-md bg-white text-black border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
           />
-          
           <input
-            className="w-full h-12 px-4 rounded-md bg-white/90 border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
             type="datetime-local"
-             {...register("date&time")}
-
             required
+            {...register("date&time")}
+            className="w-full h-12 px-4 rounded-md bg-white text-black border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
           />
           <input
-            className="w-full h-12 px-4 rounded-md bg-white/90 border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
             list="browse"
-            {...register("no of peoples")}
-
             placeholder="NO OF PEOPLE"
             required
+            {...register("noOfPeople")}
+            className="w-full h-12 px-4 rounded-md bg-white text-black border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none"
           />
-          
           <datalist id="browse">
             <option value="2" />
             <option value="3" />
@@ -73,15 +68,14 @@ const TableOrder = () => {
 
           {/* Full width textarea */}
           <textarea
-            className="w-full h-28 px-4 py-3 rounded-md bg-white/90 border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none md:col-span-2 resize-none"
             placeholder="SPECIAL ATTENTIONS"
-             {...register("special attention")}
-
             required
+            {...register("specialAttention")}
+            className="w-full h-28 px-4 py-3 rounded-md bg-white text-black border border-gray-300 focus:ring-2 focus:ring-amber-400 outline-none md:col-span-2 resize-none"
           />
         </div>
 
-        {/* Button */}
+        {/* Submit Button */}
         <div className="flex justify-center mt-8">
           <button
             type="submit"
@@ -92,7 +86,6 @@ const TableOrder = () => {
         </div>
       </form>
     </div>
-   
   );
 };
 

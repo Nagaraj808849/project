@@ -1,112 +1,126 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-export default function CartPage() {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Pizza", price: 250, qty: 2 },
-    { id: 2, name: "Burger", price: 150, qty: 1 },
-    { id: 3, name: "Pasta", price: 200, qty: 3 },
-  ]);
+function CartPage() {
+  const [cartItems, setCartItems] = useState([]);
 
-  // Increase quantity
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartItems(cart);
+  }, []);
+
+  const updateCart = (items) => {
+    setCartItems(items);
+    localStorage.setItem("cart", JSON.stringify(items));
+  };
+
   const increaseQty = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item
-      )
+    const updated = cartItems.map((item) =>
+      item.id === id ? { ...item, qty: item.qty + 1 } : item
     );
+    updateCart(updated);
   };
 
-  // Decrease quantity
   const decreaseQty = (id) => {
-    setCartItems(
-      cartItems
-        .map((item) =>
-          item.id === id && item.qty > 1
-            ? { ...item, qty: item.qty - 1 }
-            : item
-        )
-        .filter((item) => item.qty > 0)
-    );
+    const updated = cartItems
+      .map((item) =>
+        item.id === id ? { ...item, qty: item.qty - 1 } : item
+      )
+      .filter((item) => item.qty > 0);
+    updateCart(updated);
   };
 
-  // Remove item
   const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    const updated = cartItems.filter((item) => item.id !== id);
+    updateCart(updated);
   };
 
-  // Calculate total
+  // Helper to parse price string like "₹150" to number 150
+  const parsePrice = (price) => Number(price.replace(/[^0-9.-]+/g, ""));
+
   const totalAmount = cartItems.reduce(
-    (total, item) => total + item.price * item.qty,
+    (total, item) => total + parsePrice(item.price) * item.qty,
     0
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex justify-center">
-      <div className="w-full max-w-4xl bg-white shadow-lg rounded-2xl p-6">
-        <h1 className="text-3xl font-bold text-center mb-6">🛒 Your Cart</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
+      <div className="w-full max-w-4xl">
+        <Link
+  to="/Menu1"
+  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow transition"
+>
+  ← Back to Menu
+</Link>
 
-        {cartItems.length > 0 ? (
+
+        <h1 className="text-3xl font-bold mb-6 text-center">🛒 Your Cart</h1>
+
+        {cartItems.length === 0 ? (
+          <p className="text-center text-gray-600 text-lg">
+            Your cart is empty
+          </p>
+        ) : (
           <>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-100 text-gray-700">
-                  <th className="p-3">Item</th>
-                  <th className="p-3">Price</th>
-                  <th className="p-3">Quantity</th>
-                  <th className="p-3">Total</th>
-                  <th className="p-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3 font-medium">{item.name}</td>
-                    <td className="p-3">₹{item.price}</td>
-                    <td className="p-3 flex items-center gap-2">
-                      <button
-                        onClick={() => decreaseQty(item.id)}
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        -
-                      </button>
-                      <span>{item.qty}</span>
-                      <button
-                        onClick={() => increaseQty(item.id)}
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        +
-                      </button>
-                    </td>
-                    <td className="p-3 font-semibold">
-                      ₹{item.price * item.qty}
-                    </td>
-                    <td className="p-3">
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {/* Cart Items */}
+            <div className="bg-white rounded-xl shadow p-6 space-y-4">
+              {cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center border-b pb-3 last:border-b-0"
+                >
+                  <div>
+                    <h2 className="font-medium text-lg">{item.name}</h2>
+                    <p className="text-gray-500">₹{parsePrice(item.price)}</p>
+                  </div>
 
-            {/* Cart Summary */}
-            <div className="flex justify-between items-center mt-6">
-              <h2 className="text-xl font-bold">Total: ₹{totalAmount}</h2>
-              <button className="bg-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition">
-                Proceed to Checkout
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => decreaseQty(item.id)}
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center">{item.qty}</span>
+                    <button
+                      onClick={() => increaseQty(item.id)}
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">
+                      ₹{parsePrice(item.price) * item.qty}
+                    </span>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="text-red-500 hover:text-red-600 transition"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Total & Payment Button */}
+            <div className="mt-6 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow">
+              <h2 className="text-xl font-bold">
+                Total: ₹{totalAmount}
+              </h2>
+              <Link to="/PaymentDetails">
+              <button className="mt-4 md:mt-0 w-full md:w-auto bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-semibold transition">
+                Proceed to Payment
               </button>
+              </Link>
             </div>
           </>
-        ) : (
-          <p className="text-center text-gray-600 italic">
-            Your cart is empty 🛍️
-          </p>
         )}
       </div>
     </div>
   );
 }
+
+export default CartPage;

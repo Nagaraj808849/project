@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
 
-// Sample menu data with image URLs
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 const menuItems = [
   {
     id: 1,
@@ -338,73 +339,46 @@ const menuItems = [
 
 ];
 
-const categories = ['All', 'Starters', 'Main Course', 'Desserts', 'Drinks' ,];
+export default function MenuPage() {
+  const addToCart = (item) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+    const exist = cart.find((i) => i.id === item.id);
 
-function App() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+    if (exist) {
+      exist.qty += 1;
+    } else {
+      cart.push({ ...item, qty: 1 });
+    }
 
-  const filteredItems =
-    selectedCategory === 'All'
-      ? menuItems
-      : menuItems.filter((item) => item.category === selectedCategory);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Item added to cart 🛒");
+  };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <header className=" bg-gradient-to-br bg-blue-100 text-white p-6 text-center">
-        <h1 className="text-4xl font-bold text-black ">🌮  Digital Restaurant Menu</h1>
-      </header>
-
-      {/* Menu Filter Bar */}
-      <div className="flex flex-wrap justify-center gap-3 mt-6 px-4">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-2 rounded ${
-              selectedCategory === cat
-                ? 'bg-green-600 text-white'
-                : 'bg-white text-gray-700 border'
-            } hover:bg-green-500 hover:text-white transition`}
-          >
-            {cat}
-          </button>
-        ))}
+    <div className="p-6">
+      <div className="flex justify-between mb-6">
+        <h1 className="text-3xl font-bold">Menu</h1>
+        <Link to="/cart" className="bg-green-600 text-white px-4 py-2 rounded">
+          🛒 View Cart
+        </Link>
       </div>
 
-
-      {/* Menu Items */}
-      <main className="max-w-7xl mx-auto mt-10 px-5">
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
-              <div key={item.id} className="bg-white rounded shadow overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-48 object-cover hover:scale-105 transition"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-medium mb-2 ">{item.name}</h3>
-                  <p className="text-gray-600 mb-2">{item.description}</p>
-                  <div className='flex justify-between'>
-                  <span className="font-bold text-green-600">{item.price}</span>
-                  <p className=" mb-2  text-black bg-white hover:bg-green-600  border rounded-[20px] px-[8px] cursor-pointer"> 🛒 Add cart</p>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="col-span-3 text-center text-gray-500">No items found.</p>
-          )}
-        </div>
-      </main>
-
-      <footer className="text-center text-gray-500 py-6 mt-10">
-        © 2025 Digital Restaurant. All rights reserved.
-      </footer>
+      <div className="grid md:grid-cols-3 gap-6">
+        {menuItems.map((item) => (
+          <div key={item.id} className="bg-white shadow p-4 rounded">
+            <img src={item.image} className="h-40 w-full object-cover" />
+            <h2 className="font-semibold">{item.name}</h2>
+            <p>₹{item.price}</p>
+            <button
+              onClick={() => addToCart(item)}
+              className="bg-blue-500 text-white px-3 py-1 mt-2 rounded"
+            >
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
-export default App;
