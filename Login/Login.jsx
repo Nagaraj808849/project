@@ -1,40 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaLock } from "react-icons/fa";
+import { useAuth } from "../src/context/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+  const [error, setError] = useState("");
 
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
   });
 
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/Homepage1");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // 🔥 Create default admin on first load
+  useEffect(() => {
+    const admins = JSON.parse(localStorage.getItem("admins")) || [];
+
+    const defaultAdmin = {
+      username: "admin",
+      email: "admin@gmail.com",
+      password: "admin123",
+      role: "admin",
+      id: 1,
+    };
+
+    const exists = admins.find((a) => a.email === defaultAdmin.email);
+    if (!exists) {
+      admins.push(defaultAdmin);
+      localStorage.setItem("admins", JSON.stringify(admins));
+    }
+  }, []);
+
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
+    setError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
+    const admins = JSON.parse(localStorage.getItem("admins")) || [];
 
-    const validUser = users.find(
-      (user) =>
-        user.username === loginData.username &&
-        user.password === loginData.password
+    // 🔐 Check admin login
+    const admin = admins.find(
+      (a) =>
+        (a.username === loginData.username || a.email === loginData.username) &&
+        a.password === loginData.password
     );
 
-    if (!validUser) {
-      alert("Invalid Username or Password");
+    if (admin) {
+      login(admin);
+      navigate("/Admin");
       return;
     }
 
-    // Save logged-in user session
-    localStorage.setItem("currentUser", JSON.stringify(validUser));
+    // 👤 Check user login
+    const user = users.find(
+      (u) =>
+        (u.username === loginData.username || u.email === loginData.username) &&
+        u.password === loginData.password
+    );
 
-    alert("Login Successful!");
-    navigate("/"); // change to your home/dashboard route
+    if (user) {
+      login({ ...user, role: "user" });
+      navigate("/Homepage1");
+      return;
+    }
+
+    setError("Invalid Username or Password");
   };
 
   return (
@@ -79,6 +121,7 @@ const Login = () => {
             >
               Login
             </button>
+            {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
           </form>
 
           <p className="mt-4 text-sm text-gray-400">

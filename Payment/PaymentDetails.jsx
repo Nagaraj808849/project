@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../src/context/useAuth";
 
 export default function PaymentPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -25,8 +29,30 @@ export default function PaymentPage() {
     setTimeout(() => {
       setIsProcessing(false);
       setShowSuccess(true);
-      // Optionally, clear cart after payment
+      
+      // Save order to localStorage
+      const newOrder = {
+        id: `#ORD${Date.now()}`,
+        items: cartItems,
+        total: totalAmount,
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        status: "Delivered",
+        paymentMethod: "Online Payment"
+      };
+
+      // Get existing orders or create new array
+      const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+      existingOrders.push(newOrder);
+      localStorage.setItem("orders", JSON.stringify(existingOrders));
+
+      // Clear cart after payment
       localStorage.removeItem("cart");
+
+      // Redirect to UserDash after 2 seconds
+      setTimeout(() => {
+        navigate("/UserDash");
+      }, 2000);
     }, 3000);
   };
 
@@ -84,13 +110,9 @@ export default function PaymentPage() {
               <h2 className="text-xl font-bold mb-2 text-green-600">
                 Payment Successful 🎉
               </h2>
-              <p className="text-gray-600 mb-4">Your food order has been confirmed.</p> 
-              <button
-                onClick={() => setShowSuccess(false)}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-xl"
-              >
-                OK
-              </button>
+              <p className="text-gray-600 mb-4">Your food order has been confirmed.</p>
+              <p className="text-sm text-gray-500 mb-4">Redirecting to your dashboard...</p>
+              <div className="animate-spin inline-block w-6 h-6 border-4 border-green-600 border-t-transparent rounded-full"></div>
             </div>
           </div>
         )}

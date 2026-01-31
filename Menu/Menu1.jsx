@@ -1,7 +1,3 @@
-
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
 const menuItems = [
   {
     id: 1,
@@ -338,11 +334,20 @@ const menuItems = [
 
 
 ];
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+// (menuItems array remains EXACTLY as you sent)
 
 export default function MenuPage() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
   const addToCart = (item) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
     const exist = cart.find((i) => i.id === item.id);
 
     if (exist) {
@@ -355,21 +360,95 @@ export default function MenuPage() {
     alert("Item added to cart 🛒");
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    alert("Logged out successfully");
+    navigate("/login");
+  };
+
+  const filteredItems =
+    selectedCategory === "All"
+      ? menuItems
+      : menuItems.filter((item) => item.category === selectedCategory);
+
+  const categories = ["All", "Starters", "Main Course", "Desserts", "Drinks", "Specials"];
+
   return (
     <div className="p-6">
-      <div className="flex justify-between mb-6">
+      {/* HEADER */}
+      <div className="flex justify-between mb-6 items-center">
         <h1 className="text-3xl font-bold">Menu</h1>
-        <Link to="/cart" className="bg-green-600 text-white px-4 py-2 rounded">
-          🛒 View Cart
-        </Link>
+
+        <div className="flex items-center gap-4 relative">
+          {/* 🛒 Cart */}
+          <Link to="/cart" className="bg-green-600 text-white px-4 py-2 rounded">
+            🛒 View Cart
+          </Link>
+
+          {/* 👤 User Profile */}
+          {currentUser && (
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="bg-gray-800 text-white px-4 py-2 rounded-full"
+              >
+                👤 {currentUser.username}
+              </button>
+
+              {showProfileMenu && (
+                <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-lg z-50">
+                  <Link
+                    to="/dashboard"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    📊 Dashboard
+                  </Link>
+
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    🧾 Profile
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
+                  >
+                    🚪 Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* CATEGORY BUTTONS */}
+      <div className="flex flex-wrap gap-3 mb-6">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-4 py-2 rounded-full font-semibold transition ${
+              selectedCategory === cat
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 hover:bg-blue-200"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* MENU ITEMS */}
       <div className="grid md:grid-cols-3 gap-6">
-        {menuItems.map((item) => (
+        {filteredItems.map((item) => (
           <div key={item.id} className="bg-white shadow p-4 rounded">
-            <img src={item.image} className="h-40 w-full object-cover" />
+            <img src={item.image} className="h-40 w-full object-cover" alt={item.name} />
             <h2 className="font-semibold">{item.name}</h2>
-            <p>₹{item.price}</p>
+            <p className="text-gray-500 text-sm">{item.description}</p>
+            <p className="font-bold">{item.price}</p>
             <button
               onClick={() => addToCart(item)}
               className="bg-blue-500 text-white px-3 py-1 mt-2 rounded"
@@ -382,3 +461,4 @@ export default function MenuPage() {
     </div>
   );
 }
+

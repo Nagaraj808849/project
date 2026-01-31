@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 const initialMenu = [
@@ -13,13 +13,42 @@ export default function Admin() {
     return storedMenu ? JSON.parse(storedMenu) : initialMenu;
   });
 
-  const [view, setView] = useState("Dashboard"); // Dashboard | Orders | Settings
+  const [view, setView] = useState("Dashboard"); // Dashboard | Orders | Settings | Users
   const [newSpecial, setNewSpecial] = useState({ name: "", price: "" });
+
+  // Admin data sources
+  const [users, setUsers] = useState(() => {
+    const s = localStorage.getItem("users");
+    return s ? JSON.parse(s) : [];
+  });
+
+  const [admins, setAdmins] = useState(() => {
+    const s = localStorage.getItem("admins");
+    return s ? JSON.parse(s) : [{ username: "admin", password: "admin123" }];
+  });
+
+  const [orders, setOrders] = useState(() => {
+    const s = localStorage.getItem("orders");
+    return s ? JSON.parse(s) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem("menu", JSON.stringify(menu));
   }, [menu]);
 
+  useEffect(() => {
+    localStorage.setItem("users", JSON.stringify(users));
+  }, [users]);
+
+  useEffect(() => {
+    localStorage.setItem("admins", JSON.stringify(admins));
+  }, [admins]);
+
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }, [orders]);
+
+  // Specials management
   const addSpecial = () => {
     if (!newSpecial.name || !newSpecial.price) return;
     const newItem = {
@@ -28,13 +57,40 @@ export default function Admin() {
       price: Number(newSpecial.price),
       category: "Specials",
     };
-    setMenu([...menu, newItem]);
+    setMenu((m) => [...m, newItem]);
     setNewSpecial({ name: "", price: "" });
   };
 
   const removeSpecial = (id) => {
-    setMenu(menu.filter((item) => item.id !== id));
+    setMenu((m) => m.filter((item) => item.id !== id));
   };
+
+  // Users management
+  const removeUser = (username) => {
+    if (!confirm(`Remove user ${username}? This cannot be undone.`)) return;
+    setUsers((u) => u.filter((x) => x.username !== username));
+  };
+
+  // Orders management
+  const updateOrderStatus = (orderId, newStatus) => {
+    setOrders((prev) => {
+      const updated = prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o));
+      return updated;
+    });
+  };
+
+  const deleteOrder = (orderId) => {
+    if (!confirm(`Delete order ${orderId}?`)) return;
+    setOrders((prev) => prev.filter((o) => o.id !== orderId));
+  };
+
+  const stats = useMemo(() => {
+    const totalUsers = users.length;
+    const totalOrders = orders.length;
+    const revenue = orders.reduce((s, o) => s + (Number(o.total) || 0), 0);
+    const pending = orders.filter((o) => o.status === "Pending").length;
+    return { totalUsers, totalOrders, revenue, pending };
+  }, [users, orders]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -51,7 +107,6 @@ export default function Admin() {
             Dashboard
           </button>
 
-          {/* Link to real Menu page */}
           <Link
             to="/Menu1"
             className="block hover:bg-gray-700 p-2 rounded text-white font-medium"
@@ -69,6 +124,15 @@ export default function Admin() {
           </button>
 
           <button
+            onClick={() => setView("Users")}
+            className={`hover:bg-gray-700 p-2 rounded ${
+              view === "Users" ? "bg-gray-700 font-semibold" : ""
+            }`}
+          >
+            Users
+          </button>
+
+          <button
             onClick={() => setView("Settings")}
             className={`hover:bg-gray-700 p-2 rounded ${
               view === "Settings" ? "bg-gray-700 font-semibold" : ""
@@ -82,11 +146,149 @@ export default function Admin() {
       {/* Main Content */}
       <main className="flex-1 p-8">
         {view === "Dashboard" && (
-          <h2 className="text-3xl font-bold mb-6">Welcome to Dashboard</h2>
+          <>
+            <h2 className="text-3xl font-bold mb-6">Overview</h2>
+
+            <div className="grid grid-cols-4 gap-4 mb-6">
+              <div className="bg-white p-4 rounded shadow">
+                <div className="text-sm text-gray-500">Users</div>
+                <div className="text-2xl font-bold">{stats.totalUsers}</div>
+              </div>
+              <div className="bg-white p-4 rounded shadow">
+                <div className="text-sm text-gray-500">Orders</div>
+                <div className="text-2xl font-bold">{stats.totalOrders}</div>
+              </div>
+              <div className="bg-white p-4 rounded shadow">
+                <div className="text-sm text-gray-500">Revenue</div>
+                <div className="text-2xl font-bold">₹{stats.revenue}</div>
+              </div>
+              <div className="bg-white p-4 rounded shadow">
+                <div className="text-sm text-gray-500">Pending</div>
+                <div className="text-2xl font-bold">{stats.pending}</div>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-semibold mb-3">Recent Orders</h3>
+            <div className="bg-white rounded shadow p-4">
+              {orders.length === 0 ? (
+                <div className="text-gray-500">No orders yet.</div>
+              ) : (
+                <ul className="space-y-3">
+                  {orders
+                    .slice()
+                    .reverse()
+                    .slice(0, 6)
+                    .map((o) => (
+                      <li key={o.id} className="flex justify-between">
+                        <div>
+                          <div className="font-semibold">{o.id}</div>
+                          <div className="text-sm text-gray-600">{o.date} {o.time} • ₹{o.total}</div>
+                        </div>
+                        <div className="text-sm">
+                          <span className="px-2 py-1 bg-gray-100 rounded">{o.status || "Pending"}</span>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          </>
         )}
 
         {view === "Orders" && (
-          <h2 className="text-3xl font-bold mb-6">Orders Management</h2>
+          <>
+            <h2 className="text-3xl font-bold mb-6">Orders Management</h2>
+
+            <div className="bg-white rounded shadow p-4">
+              {orders.length === 0 ? (
+                <div className="text-gray-500">No orders found.</div>
+              ) : (
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="p-2">Order ID</th>
+                      <th className="p-2">Customer</th>
+                      <th className="p-2">Total</th>
+                      <th className="p-2">Date</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders
+                      .slice()
+                      .reverse()
+                      .map((o) => (
+                        <tr key={o.id} className="border-b hover:bg-gray-50">
+                          <td className="p-2">{o.id}</td>
+                          <td className="p-2">{o.customerName || "-"}</td>
+                          <td className="p-2">₹{o.total}</td>
+                          <td className="p-2">{o.date} {o.time}</td>
+                          <td className="p-2">
+                            <select
+                              value={o.status || "Pending"}
+                              onChange={(e) => updateOrderStatus(o.id, e.target.value)}
+                              className="border rounded px-2 py-1"
+                            >
+                              <option>Pending</option>
+                              <option>Preparing</option>
+                              <option>Completed</option>
+                              <option>Cancelled</option>
+                            </select>
+                          </td>
+                          <td className="p-2">
+                            <button
+                              onClick={() => deleteOrder(o.id)}
+                              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </>
+        )}
+
+        {view === "Users" && (
+          <>
+            <h2 className="text-3xl font-bold mb-6">Users</h2>
+
+            <div className="bg-white rounded shadow p-4">
+              {users.length === 0 ? (
+                <div className="text-gray-500">No registered users.</div>
+              ) : (
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="p-2">Username</th>
+                      <th className="p-2">Email</th>
+                      <th className="p-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((u) => (
+                      <tr key={u.username} className="border-b hover:bg-gray-50">
+                        <td className="p-2">{u.username}</td>
+                        <td className="p-2">{u.email || "-"}</td>
+                        <td className="p-2">
+                          <button
+                            onClick={() => removeUser(u.username)}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </>
         )}
 
         {view === "Settings" && (

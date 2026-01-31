@@ -1,41 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { useAuth } from "../src/context/useAuth";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { signup, isAuthenticated } = useAuth();
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/Homepage1");
+    }
+  }, [isAuthenticated, navigate]);
 
   // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
   };
 
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Get existing users from localStorage
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    // Check if email already exists
-    const userExists = users.find((user) => user.email === formData.email);
-    if (userExists) {
-      alert("User already registered with this email!");
+    // Validation
+    if (!formData.username || !formData.email || !formData.password) {
+      setError("All fields are required");
       return;
     }
 
-    // Save new user
-    users.push(formData);
-    localStorage.setItem("users", JSON.stringify(users));
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-    alert("Signup Successful!");
-    navigate("/Login"); // Redirect to login page
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    try {
+      signup({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+      navigate("/Login");
+    } catch (err) {
+      setError(err.message || "Signup failed");
+    }
   };
 
   return (
@@ -95,6 +117,20 @@ const Signup = () => {
               <FaLock className="absolute left-2 top-3 text-gray-400" />
             </div>
 
+            {/* Confirm Password */}
+            <div className="relative">
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full py-2 pl-10 pr-4 bg-transparent border-b border-gray-600 focus:outline-none focus:border-cyan-400"
+                required
+              />
+              <FaLock className="absolute left-2 top-3 text-gray-400" />
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -102,6 +138,7 @@ const Signup = () => {
             >
               Sign Up
             </button>
+            {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
           </form>
 
           <p className="mt-4 text-sm text-center text-gray-400">

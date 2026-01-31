@@ -1,337 +1,190 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../src/context/useAuth";
 
-/**
- * Scientific Calculator - Single React file using Tailwind CSS
- * - Put this file in your components folder and import it (or render directly)
- * - Requires Tailwind CSS already configured in the project.
- *
- * Usage:
- *   <ScientificCalculator />
- */
-
-export default function ScientificCalculator() {
-  const [expr, setExpr] = useState("");           // current expression shown
-  const [result, setResult] = useState("");       // last computed result
-  const [degMode, setDegMode] = useState(true);   // degrees vs radians
-  const [memory, setMemory] = useState(0);        // memory register
-  const [history, setHistory] = useState([]);     // calculation history
-  const inputRef = useRef(null);
+export default function UserDash() {
+  const navigate = useNavigate();
+  const { user, logout, updateProfile } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [view, setView] = useState("home"); // home | profile | orders
+  const [orders, setOrders] = useState([]);
+  const [profile, setProfile] = useState({
+    name: user?.username || "User",
+    email: user?.email || "user@email.com",
+    phone: "+91 98765 43210",
+    address: "Bangalore, Karnataka",
+  });
 
   useEffect(() => {
-    // keyboard handler
-    function handleKey(e) {
-      const key = e.key;
-      if ((/^[0-9.+\-*/()%]$/).test(key)) {
-        setExpr((s) => s + key);
-        e.preventDefault();
-      } else if (key === "Enter") {
-        evaluate();
-        e.preventDefault();
-      } else if (key === "Backspace") {
-        backspace();
-        e.preventDefault();
-      } else if (key === "^") {
-        setExpr((s) => s + "^");
-        e.preventDefault();
-      }
-    }
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [expr, degMode]);
+    const saved = localStorage.getItem("profile");
+    if (saved) setProfile(JSON.parse(saved));
+    
+    // Load orders from localStorage
+    const savedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    setOrders(savedOrders.reverse()); // Show newest first
+  }, []);
 
-  // helper: safe evaluate expression using Math functions with degree handling for trig
-  const evaluate = () => {
-    if (!expr.trim()) return;
-    try {
-      const cleaned = expr
-        .replace(/×/g, "*")
-        .replace(/÷/g, "/")
-        .replace(/−/g, "-")
-        .replace(/(\d)(?=\()/g, "$1*(") // allow 2(3+4) => 2*(3+4)
-        .replace(/(\))(?=\d)/g, ")*"); // allow (2+3)4 => (2+3)*4
-
-      // create wrappers for trig depending on degMode
-      const degToRad = (v) => (v * Math.PI) / 180;
-      const wrap = {
-        sin: (v) => Math.sin(degMode ? degToRad(v) : v),
-        cos: (v) => Math.cos(degMode ? degToRad(v) : v),
-        tan: (v) => Math.tan(degMode ? degToRad(v) : v),
-        asin: (v) => (degMode ? (Math.asin(v) * 180) / Math.PI : Math.asin(v)),
-        acos: (v) => (degMode ? (Math.acos(v) * 180) / Math.PI : Math.acos(v)),
-        atan: (v) => (degMode ? (Math.atan(v) * 180) / Math.PI : Math.atan(v)),
-      };
-
-      // Build a sandboxed expression by replacing function names with wrapper calls
-      let sandboxExpr = cleaned
-        // functions with two args: e.g. pow(a,b) or x^y -> use pow
-        .replace(/\^/g, "**") // support caret as power (JS uses **)
-        // map common function names to Math equivalents
-        .replace(/\bln\(/g, "Math.log(")      // natural log
-        .replace(/\blog\(/g, "Math.log10(")   // base-10 log
-        .replace(/\bsqrt\(/g, "Math.sqrt(")
-        .replace(/\babs\(/g, "Math.abs(")
-        .replace(/\bexp\(/g, "Math.exp(")
-        .replace(/\be\b/g, `(${Math.E})`)     // constant e
-        .replace(/\bpi\b/gi, `(${Math.PI})`); // constant pi
-
-      // Replace trig function calls to prefixed wrapper names to call below
-      sandboxExpr = sandboxExpr
-        .replace(/\basin\s*\(/gi, "__asin(")
-        .replace(/\bacos\s*\(/gi, "__acos(")
-        .replace(/\batan\s*\(/gi, "__atan(")
-        .replace(/\bsin\s*\(/gi, "__sin(")
-        .replace(/\bcos\s*\(/gi, "__cos(")
-        .replace(/\btan\s*\(/gi, "__tan(");
-
-      // Validate characters: allow digits, letters, Math, operators, parentheses, ., _, * , /
-      if (!/^[0-9+\-*/()., *_A-Za-z\[\]]+$/.test(sandboxExpr)) {
-        throw new Error("Invalid characters in expression");
-      }
-
-      // build function with wrapper functions injected
-      const fn = new Function(
-        "__sin",
-        "__cos",
-        "__tan",
-        "__asin",
-        "__acos",
-        "__atan",
-        "Math",
-        `return (${sandboxExpr});`
-      );
-
-      const value = fn(
-        wrap.sin,
-        wrap.cos,
-        wrap.tan,
-        wrap.asin,
-        wrap.acos,
-        wrap.atan,
-        Math
-      );
-
-      const display = Number.isFinite(value)
-        ? +parseFloat(value).toPrecision(12) // tidy precision
-        : value;
-
-      setResult(String(display));
-      setHistory((h) => [{ expr, result: String(display) }, ...h].slice(0, 20));
-    } catch (err) {
-      setResult("Error");
-      console.error("Calc error:", err);
-    }
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
-  const press = (txt) => {
-    setExpr((s) => s + txt);
-    inputRef.current?.focus();
+  const updateUserProfile = () => {
+    localStorage.setItem("profile", JSON.stringify(profile));
+    updateProfile({ ...user, username: profile.name, email: profile.email });
+    alert("Profile updated successfully ✅");
   };
-
-  const clearAll = () => {
-    setExpr("");
-    setResult("");
-  };
-
-  const backspace = () => setExpr((s) => s.slice(0, -1));
-
-  // Memory operations
-  const memoryClear = () => setMemory(0);
-  const memoryRecall = () => setExpr((s) => s + String(memory));
-  const memoryAdd = () => {
-    const val = parseFloat(result || expr || 0) || 0;
-    setMemory((m) => m + val);
-  };
-  const memorySub = () => {
-    const val = parseFloat(result || expr || 0) || 0;
-    setMemory((m) => m - val);
-  };
-
-  // Quick button layout
-  const rows = [
-    ["MC", "MR", "M+", "M-", "Deg/Rad"],
-    ["(", ")", "CE", "⌫", "÷"],
-    ["7", "8", "9", "×", "sqrt("],
-    ["4", "5", "6", "-", "x^y"],
-    ["1", "2", "3", "+", "log("],
-    ["0", ".", "±", "=", "ln("],
-    ["sin(", "cos(", "tan(", "exp(", "pi"],
-  ];
-
-  // handle special buttons
-  const handleButton = (b) => {
-    if (b === "CE") return clearAll();
-    if (b === "⌫") return backspace();
-    if (b === "MC") return memoryClear();
-    if (b === "MR") return memoryRecall();
-    if (b === "M+") return memoryAdd();
-    if (b === "M-") return memorySub();
-    if (b === "Deg/Rad") return setDegMode((d) => !d);
-    if (b === "×") return press("*");
-    if (b === "÷") return press("/");
-    if (b === "x^y") return press("^");
-    if (b === "±") {
-      // toggle sign of last number
-      setExpr((s) => {
-        if (!s) return "-";
-        // find last number
-        const m = s.match(/(-?\d+\.?\d*)$/);
-        if (m) {
-          const num = m[1];
-          const replaced = s.slice(0, -num.length) + (num.startsWith("-") ? num.slice(1) : "-" + num);
-          return replaced;
-        } else {
-          return s + "-";
-        }
-      });
-      return;
-    }
-    // default: press text directly
-    press(b);
-    if (b === "=") evaluate();
-  };
-
-  // When user clicks "=" we want to evaluate; but "=" isn't in rows except handled by click
-  const clickEquals = () => evaluate();
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-red-600 text-white px-4 py-3 flex items-center justify-between">
-          <div className="font-bold text-lg">Scientific Calculator</div>
-          <div className="text-sm">{degMode ? "Degrees" : "Radians"}</div>
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+        <div className="flex items-center gap-3">
+          <h1 className="font-bold text-2xl">🍴 Golden Essence</h1>
+          <span className="text-sm text-amber-100">User Dashboard</span>
         </div>
 
-        {/* Display */}
-        <div className="p-4 space-y-2">
-          <div className="bg-gray-50 rounded-md p-3 text-right text-sm text-gray-600 break-words min-h-[44px]">
-            <input
-              ref={inputRef}
-              value={expr}
-              onChange={(e) => setExpr(e.target.value)}
-              className="w-full bg-transparent outline-none text-right text-2xl font-mono"
-              placeholder="Enter expression..."
-            />
-          </div>
+        <div className="relative">
+          <img
+            src="https://i.pravatar.cc/40"
+            alt="profile"
+            className="rounded-full border-2 border-white cursor-pointer"
+            onClick={() => setMenuOpen(!menuOpen)}
+          />
 
-          <div className="flex items-center justify-between text-sm text-gray-700">
-            <div>Result:</div>
-            <div className="font-semibold text-lg">{result || "—"}</div>
-          </div>
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow">
+              <button
+                onClick={() => {
+                  setView("profile");
+                  setMenuOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                Update Profile
+              </button>
+              <button
+                onClick={() => {
+                  setView("orders");
+                  setMenuOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                Order Details
+              </button>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
+              >
+                Log Out
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
 
-          <div className="flex gap-2 items-center text-xs">
-            <div className="text-gray-500">Memory:</div>
-            <div className="font-mono px-2 py-1 bg-gray-100 rounded">{String(memory)}</div>
-            <div className="ml-2 text-gray-500">History:</div>
-            <div className="flex-1 overflow-x-auto">
-              <div className="flex gap-2">
-                {history.slice(0, 6).map((h, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setExpr(h.expr);
-                      setResult(h.result);
-                    }}
-                    className="text-xs px-2 py-1 bg-gray-100 rounded"
-                  >
-                    {h.expr} = {h.result}
-                  </button>
-                ))}
-                {history.length === 0 && <div className="text-xs text-gray-400">—</div>}
-              </div>
+      {/* Content */}
+      <main className="p-6 max-w-4xl mx-auto">
+        {view === "home" && (
+          <div className="bg-white p-6 rounded-xl shadow text-center">
+            <h2 className="text-xl font-semibold">Welcome, {profile.name} 👋</h2>
+            <p className="text-gray-600 mt-2">Use the profile icon to manage your account</p>
+          </div>
+        )}
+
+        {view === "profile" && (
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-lg font-semibold mb-4">👤 Update Profile</h2>
+            <div className="space-y-4">
+              <input
+                className="w-full border p-2 rounded"
+                value={profile.name}
+                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+              />
+              <input
+                className="w-full border p-2 rounded"
+                value={profile.email}
+                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+              />
+              <input
+                className="w-full border p-2 rounded"
+                value={profile.phone}
+                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+              />
+              <textarea
+                className="w-full border p-2 rounded"
+                value={profile.address}
+                onChange={(e) => setProfile({ ...profile, address: e.target.value })}
+              />
+              <button
+                onClick={updateUserProfile}
+                className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700"
+              >
+                Save Changes
+              </button>
+              <button
+                onClick={() => setView("home")}
+                className="w-full border py-2 rounded"
+              >
+                Back
+              </button>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Buttons */}
-        <div className="p-4 grid gap-2">
-          <div className="grid grid-cols-5 gap-2">
-            {/* render a few quick buttons */}
-            <button onClick={() => handleButton("MC")} className="btn">
-              MC
-            </button>
-            <button onClick={() => handleButton("MR")} className="btn">
-              MR
-            </button>
-            <button onClick={() => handleButton("M+")} className="btn">
-              M+
-            </button>
-            <button onClick={() => handleButton("M-")} className="btn">
-              M-
-            </button>
+        {view === "orders" && (
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-lg font-semibold mb-4">🧾 Order Details</h2>
+            
+            {orders.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-lg">No orders yet</p>
+                <p className="text-gray-400 text-sm">Your orders will appear here after checkout</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {orders.map((order) => (
+                  <div key={order.id} className="border rounded-lg p-4 bg-gray-50">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-semibold text-lg">{order.id}</h3>
+                        <p className="text-sm text-gray-500">{order.date} at {order.time}</p>
+                      </div>
+                      <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                        {order.status}
+                      </span>
+                    </div>
+                    
+                    <div className="mb-3 border-t pt-3">
+                      <p className="font-semibold text-sm mb-2">Items:</p>
+                      <div className="space-y-1">
+                        {order.items.map((item) => (
+                          <div key={item.id} className="text-sm text-gray-600 flex justify-between">
+                            <span>{item.name} × {item.qty}</span>
+                            <span className="font-semibold">₹{item.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="border-t pt-3 flex justify-between">
+                      <span className="font-semibold">Total Amount:</span>
+                      <span className="text-lg font-bold text-amber-600">₹{order.total}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
             <button
-              onClick={() => handleButton("Deg/Rad")}
-              className="btn bg-gray-100 hover:bg-gray-200"
+              onClick={() => setView("home")}
+              className="mt-4 border px-4 py-2 rounded hover:bg-gray-50"
             >
-              {degMode ? "Deg" : "Rad"}
+              Back
             </button>
           </div>
-
-          {/* full button grid */}
-          <div className="grid grid-cols-5 gap-2">
-            {[
-              ["(", ")", "CE", "⌫", "÷"],
-              ["7", "8", "9", "×", "sqrt("],
-              ["4", "5", "6", "-", "x^y"],
-              ["1", "2", "3", "+", "log("],
-              ["0", ".", "±", "=", "ln("],
-              ["sin(", "cos(", "tan(", "exp(", "pi"],
-            ].flat().map((b, idx) => {
-              // style special keys
-              const isOp = ["÷", "×", "-", "+", "=", "CE", "⌫", "x^y"].includes(b);
-              const cls = `py-3 rounded-md text-sm font-medium ${
-                b === "="
-                  ? "bg-red-500 text-white hover:bg-red-600"
-                  : isOp
-                  ? "bg-gray-100 hover:bg-gray-200"
-                  : "bg-white hover:bg-gray-50"
-              }`;
-              return (
-                <button
-                  key={idx + b}
-                  onClick={() => {
-                    if (b === "=") clickEquals();
-                    else handleButton(b);
-                  }}
-                  className={cls}
-                >
-                  {b}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* extra controls */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                // evaluate and also append to expr as result
-                evaluate();
-                if (result) setExpr(String(result));
-              }}
-              className="flex-1 py-2 rounded-md bg-green-600 text-white"
-            >
-              Evaluate
-            </button>
-            <button
-              onClick={() => {
-                setHistory([]);
-                setMemory(0);
-                clearAll();
-              }}
-              className="py-2 px-4 rounded-md bg-gray-100 hover:bg-gray-200"
-            >
-              Reset
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* small styles injected */}
-      <style>{`
-        .btn { padding: 0.6rem; border-radius: 0.5rem; background: #f7fafc; border: 1px solid #e5e7eb; }
-        .btn:hover { background: #f1f5f9; }
-      `}</style>
+        )}
+      </main>
     </div>
   );
 }
