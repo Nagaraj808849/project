@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { BarChart3, Users, ShoppingCart, TrendingUp, Settings, LogOut } from "lucide-react";
 
 const initialMenu = [
   { id: 1, name: "Paneer Tikka", category: "Specials", price: 300 },
@@ -8,15 +9,15 @@ const initialMenu = [
 ];
 
 export default function Admin() {
+  const navigate = useNavigate();
   const [menu, setMenu] = useState(() => {
     const storedMenu = localStorage.getItem("menu");
     return storedMenu ? JSON.parse(storedMenu) : initialMenu;
   });
 
-  const [view, setView] = useState("Dashboard"); // Dashboard | Orders | Settings | Users
+  const [view, setView] = useState("Dashboard");
   const [newSpecial, setNewSpecial] = useState({ name: "", price: "" });
 
-  // Admin data sources
   const [users, setUsers] = useState(() => {
     const s = localStorage.getItem("users");
     return s ? JSON.parse(s) : [];
@@ -48,7 +49,6 @@ export default function Admin() {
     localStorage.setItem("orders", JSON.stringify(orders));
   }, [orders]);
 
-  // Specials management
   const addSpecial = () => {
     if (!newSpecial.name || !newSpecial.price) return;
     const newItem = {
@@ -65,13 +65,11 @@ export default function Admin() {
     setMenu((m) => m.filter((item) => item.id !== id));
   };
 
-  // Users management
   const removeUser = (username) => {
     if (!confirm(`Remove user ${username}? This cannot be undone.`)) return;
     setUsers((u) => u.filter((x) => x.username !== username));
   };
 
-  // Orders management
   const updateOrderStatus = (orderId, newStatus) => {
     setOrders((prev) => {
       const updated = prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o));
@@ -93,292 +91,424 @@ export default function Admin() {
   }, [users, orders]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-800 text-white p-6 flex flex-col">
-        <h1 className="text-2xl font-bold mb-8">Admin Dashboard</h1>
-        <nav className="flex flex-col gap-3">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-50">
+      {/* Top Header */}
+      <header className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-6 shadow-lg">
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <div>
+            <h1 className="text-4xl font-bold">🍴 Golden Essence</h1>
+            <p className="text-amber-100 text-sm mt-1">Restaurant Management System</p>
+          </div>
           <button
-            onClick={() => setView("Dashboard")}
-            className={`hover:bg-gray-700 p-2 rounded ${
-              view === "Dashboard" ? "bg-gray-700 font-semibold" : ""
-            }`}
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg font-semibold transition"
           >
-            Dashboard
+            <LogOut size={20} />
+            Exit Admin
           </button>
+        </div>
+      </header>
 
-          <Link
-            to="/Menu1"
-            className="block hover:bg-gray-700 p-2 rounded text-white font-medium"
-          >
-            Menu
-          </Link>
+      {/* Main Container */}
+      <div className="flex min-h-[calc(100vh-100px)]">
+        {/* Sidebar */}
+        <aside className="w-72 bg-gradient-to-b from-amber-900 to-amber-800 text-white p-6 shadow-xl">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-6">Admin Panel</h2>
+          </div>
+          
+          <nav className="flex flex-col gap-3">
+            <button
+              onClick={() => setView("Dashboard")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium ${
+                view === "Dashboard" 
+                  ? "bg-amber-700 text-white shadow-lg" 
+                  : "hover:bg-amber-700 text-amber-100"
+              }`}
+            >
+              <BarChart3 size={20} />
+              Dashboard
+            </button>
 
-          <button
-            onClick={() => setView("Orders")}
-            className={`hover:bg-gray-700 p-2 rounded ${
-              view === "Orders" ? "bg-gray-700 font-semibold" : ""
-            }`}
-          >
-            Orders
-          </button>
+            <Link
+              to="/Menu1"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-amber-700 transition font-medium text-amber-100 hover:text-white"
+            >
+              🍽️ Menu
+            </Link>
 
-          <button
-            onClick={() => setView("Users")}
-            className={`hover:bg-gray-700 p-2 rounded ${
-              view === "Users" ? "bg-gray-700 font-semibold" : ""
-            }`}
-          >
-            Users
-          </button>
+            <button
+              onClick={() => setView("Orders")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium ${
+                view === "Orders" 
+                  ? "bg-amber-700 text-white shadow-lg" 
+                  : "hover:bg-amber-700 text-amber-100"
+              }`}
+            >
+              <ShoppingCart size={20} />
+              Orders
+            </button>
 
-          <button
-            onClick={() => setView("Settings")}
-            className={`hover:bg-gray-700 p-2 rounded ${
-              view === "Settings" ? "bg-gray-700 font-semibold" : ""
-            }`}
-          >
-            Settings
-          </button>
-        </nav>
-      </aside>
+            <button
+              onClick={() => setView("Users")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium ${
+                view === "Users" 
+                  ? "bg-amber-700 text-white shadow-lg" 
+                  : "hover:bg-amber-700 text-amber-100"
+              }`}
+            >
+              <Users size={20} />
+              Users
+            </button>
 
-      {/* Main Content */}
-      <main className="flex-1 p-8">
-        {view === "Dashboard" && (
-          <>
-            <h2 className="text-3xl font-bold mb-6">Overview</h2>
+            <button
+              onClick={() => setView("Settings")}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium ${
+                view === "Settings" 
+                  ? "bg-amber-700 text-white shadow-lg" 
+                  : "hover:bg-amber-700 text-amber-100"
+              }`}
+            >
+              <Settings size={20} />
+              Settings
+            </button>
+          </nav>
 
-            <div className="grid grid-cols-4 gap-4 mb-6">
-              <div className="bg-white p-4 rounded shadow">
-                <div className="text-sm text-gray-500">Users</div>
-                <div className="text-2xl font-bold">{stats.totalUsers}</div>
+          <div className="mt-8 pt-6 border-t border-amber-700">
+            <button
+              onClick={() => navigate(-1)}
+              className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition"
+            >
+              ← Go Back
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-8 overflow-auto">
+          {view === "Dashboard" && (
+            <>
+              <div className="mb-8">
+                <h2 className="text-4xl font-bold text-amber-900 mb-2">Dashboard</h2>
+                <p className="text-amber-700">Welcome to Golden Essence Admin Panel</p>
               </div>
-              <div className="bg-white p-4 rounded shadow">
-                <div className="text-sm text-gray-500">Orders</div>
-                <div className="text-2xl font-bold">{stats.totalOrders}</div>
-              </div>
-              <div className="bg-white p-4 rounded shadow">
-                <div className="text-sm text-gray-500">Revenue</div>
-                <div className="text-2xl font-bold">₹{stats.revenue}</div>
-              </div>
-              <div className="bg-white p-4 rounded shadow">
-                <div className="text-sm text-gray-500">Pending</div>
-                <div className="text-2xl font-bold">{stats.pending}</div>
-              </div>
-            </div>
 
-            <h3 className="text-xl font-semibold mb-3">Recent Orders</h3>
-            <div className="bg-white rounded shadow p-4">
-              {orders.length === 0 ? (
-                <div className="text-gray-500">No orders yet.</div>
-              ) : (
-                <ul className="space-y-3">
-                  {orders
-                    .slice()
-                    .reverse()
-                    .slice(0, 6)
-                    .map((o) => (
-                      <li key={o.id} className="flex justify-between">
-                        <div>
-                          <div className="font-semibold">{o.id}</div>
-                          <div className="text-sm text-gray-600">{o.date} {o.time} • ₹{o.total}</div>
-                        </div>
-                        <div className="text-sm">
-                          <span className="px-2 py-1 bg-gray-100 rounded">{o.status || "Pending"}</span>
-                        </div>
-                      </li>
-                    ))}
-                </ul>
-              )}
-            </div>
-          </>
-        )}
+              {/* Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                {/* Users Card */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-300 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-blue-600 font-semibold text-sm mb-1">Total Users</div>
+                      <div className="text-4xl font-bold text-blue-900">{stats.totalUsers}</div>
+                    </div>
+                    <Users size={40} className="text-blue-300" />
+                  </div>
+                </div>
 
-        {view === "Orders" && (
-          <>
-            <h2 className="text-3xl font-bold mb-6">Orders Management</h2>
+                {/* Orders Card */}
+                <div className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-300 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-green-600 font-semibold text-sm mb-1">Total Orders</div>
+                      <div className="text-4xl font-bold text-green-900">{stats.totalOrders}</div>
+                    </div>
+                    <ShoppingCart size={40} className="text-green-300" />
+                  </div>
+                </div>
 
-            <div className="bg-white rounded shadow p-4">
-              {orders.length === 0 ? (
-                <div className="text-gray-500">No orders found.</div>
-              ) : (
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="p-2">Order ID</th>
-                      <th className="p-2">Customer</th>
-                      <th className="p-2">Total</th>
-                      <th className="p-2">Date</th>
-                      <th className="p-2">Status</th>
-                      <th className="p-2">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders
-                      .slice()
-                      .reverse()
-                      .map((o) => (
-                        <tr key={o.id} className="border-b hover:bg-gray-50">
-                          <td className="p-2">{o.id}</td>
-                          <td className="p-2">{o.customerName || "-"}</td>
-                          <td className="p-2">₹{o.total}</td>
-                          <td className="p-2">{o.date} {o.time}</td>
-                          <td className="p-2">
-                            <select
-                              value={o.status || "Pending"}
-                              onChange={(e) => updateOrderStatus(o.id, e.target.value)}
-                              className="border rounded px-2 py-1"
-                            >
-                              <option>Pending</option>
-                              <option>Preparing</option>
-                              <option>Completed</option>
-                              <option>Cancelled</option>
-                            </select>
-                          </td>
-                          <td className="p-2">
-                            <button
-                              onClick={() => deleteOrder(o.id)}
-                              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                            >
-                              Delete
-                            </button>
-                          </td>
+                {/* Revenue Card */}
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-400 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-amber-700 font-semibold text-sm mb-1">Total Revenue</div>
+                      <div className="text-3xl font-bold text-amber-900">₹{stats.revenue}</div>
+                    </div>
+                    <TrendingUp size={40} className="text-amber-300" />
+                  </div>
+                </div>
+
+                {/* Pending Card */}
+                <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-300 p-6 rounded-xl shadow-lg hover:shadow-xl transition">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-red-600 font-semibold text-sm mb-1">Pending Orders</div>
+                      <div className="text-4xl font-bold text-red-900">{stats.pending}</div>
+                    </div>
+                    <ShoppingCart size={40} className="text-red-300" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Orders Section */}
+              <div>
+                <h3 className="text-2xl font-bold text-amber-900 mb-4">Recent Orders</h3>
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-amber-200">
+                  {orders.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500 text-lg">No orders yet</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+                          <tr>
+                            <th className="px-6 py-3 text-left font-semibold">Order ID</th>
+                            <th className="px-6 py-3 text-left font-semibold">Amount</th>
+                            <th className="px-6 py-3 text-left font-semibold">Date</th>
+                            <th className="px-6 py-3 text-left font-semibold">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-amber-100">
+                          {orders
+                            .slice()
+                            .reverse()
+                            .slice(0, 6)
+                            .map((o) => (
+                              <tr key={o.id} className="hover:bg-amber-50 transition">
+                                <td className="px-6 py-4 font-semibold text-amber-900">{o.id}</td>
+                                <td className="px-6 py-4 font-bold text-amber-700">₹{o.total}</td>
+                                <td className="px-6 py-4 text-gray-600">{o.date} {o.time}</td>
+                                <td className="px-6 py-4">
+                                  <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                                    o.status === "Delivered" ? "bg-green-100 text-green-700" :
+                                    o.status === "Pending" ? "bg-yellow-100 text-yellow-700" :
+                                    "bg-gray-100 text-gray-700"
+                                  }`}>
+                                    {o.status || "Pending"}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Specials Management */}
+              <div className="mt-12">
+                <h2 className="text-3xl font-bold text-amber-900 mb-6">🌟 Specials Management</h2>
+
+                <div className="bg-white rounded-xl shadow-lg border border-amber-200 p-6 mb-6">
+                  <h3 className="text-xl font-semibold text-amber-900 mb-4">Add New Special</h3>
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <input
+                      type="text"
+                      placeholder="Special Name (e.g., Paneer Tikka)"
+                      className="flex-1 px-4 py-3 rounded-lg border-2 border-amber-300 focus:border-amber-600 focus:outline-none"
+                      value={newSpecial.name}
+                      onChange={(e) =>
+                        setNewSpecial({ ...newSpecial, name: e.target.value })
+                      }
+                    />
+                    <input
+                      type="number"
+                      placeholder="Price (₹)"
+                      className="w-24 px-4 py-3 rounded-lg border-2 border-amber-300 focus:border-amber-600 focus:outline-none"
+                      value={newSpecial.price}
+                      onChange={(e) =>
+                        setNewSpecial({ ...newSpecial, price: e.target.value })
+                      }
+                    />
+                    <button
+                      onClick={addSpecial}
+                      className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold transition shadow-lg"
+                    >
+                      ➕ Add Special
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-amber-200">
+                  {menu.filter((item) => item.category === "Specials").length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500 text-lg">No specials yet</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+                          <tr>
+                            <th className="px-6 py-4 text-left font-semibold">Special Name</th>
+                            <th className="px-6 py-4 text-left font-semibold">Price</th>
+                            <th className="px-6 py-4 text-left font-semibold">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-amber-100">
+                          {menu
+                            .filter((item) => item.category === "Specials")
+                            .map((item) => (
+                              <tr key={item.id} className="hover:bg-amber-50 transition">
+                                <td className="px-6 py-4 font-semibold text-amber-900">🍽️ {item.name}</td>
+                                <td className="px-6 py-4 font-bold text-amber-700">₹{item.price}</td>
+                                <td className="px-6 py-4">
+                                  <button
+                                    onClick={() => removeSpecial(item.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+                                  >
+                                    Remove
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {view === "Orders" && (
+            <>
+              <div className="mb-8">
+                <h2 className="text-4xl font-bold text-amber-900 mb-2">Orders Management</h2>
+                <p className="text-amber-700">Manage all customer orders</p>
+              </div>
+
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-amber-200">
+                {orders.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No orders found</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+                        <tr>
+                          <th className="px-6 py-4 text-left font-semibold">Order ID</th>
+                          <th className="px-6 py-4 text-left font-semibold">Amount</th>
+                          <th className="px-6 py-4 text-left font-semibold">Date & Time</th>
+                          <th className="px-6 py-4 text-left font-semibold">Status</th>
+                          <th className="px-6 py-4 text-left font-semibold">Actions</th>
                         </tr>
-                      ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </>
-        )}
-
-        {view === "Users" && (
-          <>
-            <h2 className="text-3xl font-bold mb-6">Users</h2>
-
-            <div className="bg-white rounded shadow p-4">
-              {users.length === 0 ? (
-                <div className="text-gray-500">No registered users.</div>
-              ) : (
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="p-2">Username</th>
-                      <th className="p-2">Email</th>
-                      <th className="p-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((u) => (
-                      <tr key={u.username} className="border-b hover:bg-gray-50">
-                        <td className="p-2">{u.username}</td>
-                        <td className="p-2">{u.email || "-"}</td>
-                        <td className="p-2">
-                          <button
-                            onClick={() => removeUser(u.username)}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </>
-        )}
-
-        {view === "Settings" && (
-          <>
-            <h2 className="text-3xl font-bold mb-6">Settings</h2>
-            <div className="bg-white rounded shadow p-6 space-y-4">
-              <div className="flex justify-between">
-                <span>Restaurant Name:</span>
-                <span className="font-semibold">The Spice Hub</span>
+                      </thead>
+                      <tbody className="divide-y divide-amber-100">
+                        {orders
+                          .slice()
+                          .reverse()
+                          .map((o) => (
+                            <tr key={o.id} className="hover:bg-amber-50 transition">
+                              <td className="px-6 py-4 font-semibold text-amber-900">{o.id}</td>
+                              <td className="px-6 py-4 font-bold text-amber-700">₹{o.total}</td>
+                              <td className="px-6 py-4 text-gray-600">{o.date} {o.time}</td>
+                              <td className="px-6 py-4">
+                                <select
+                                  value={o.status || "Pending"}
+                                  onChange={(e) => updateOrderStatus(o.id, e.target.value)}
+                                  className="border-2 border-amber-300 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                >
+                                  <option>Pending</option>
+                                  <option>Preparing</option>
+                                  <option>Delivered</option>
+                                  <option>Cancelled</option>
+                                </select>
+                              </td>
+                              <td className="px-6 py-4">
+                                <button
+                                  onClick={() => deleteOrder(o.id)}
+                                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
-              <div className="flex justify-between">
-                <span>Open Hours:</span>
-                <span className="font-semibold">10:00 AM - 10:00 PM</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Contact Email:</span>
-                <span className="font-semibold">contact@spicehub.com</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Phone Number:</span>
-                <span className="font-semibold">+91 9876543210</span>
-              </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
 
-        {/* Specials Management only visible when view is Dashboard */}
-        {view === "Dashboard" && (
-          <>
-            <h2 className="text-2xl font-bold mt-6 mb-4">Specials Management</h2>
+          {view === "Users" && (
+            <>
+              <div className="mb-8">
+                <h2 className="text-4xl font-bold text-amber-900 mb-2">Users Management</h2>
+                <p className="text-amber-700">Manage registered users</p>
+              </div>
 
-            <div className="mb-6 flex gap-4">
-              <input
-                type="text"
-                placeholder="Special Name"
-                className="px-4 py-2 rounded shadow border"
-                value={newSpecial.name}
-                onChange={(e) =>
-                  setNewSpecial({ ...newSpecial, name: e.target.value })
-                }
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                className="px-4 py-2 rounded shadow border"
-                value={newSpecial.price}
-                onChange={(e) =>
-                  setNewSpecial({ ...newSpecial, price: e.target.value })
-                }
-              />
-              <button
-                onClick={addSpecial}
-                className="bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600"
-              >
-                Add Special
-              </button>
-            </div>
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-amber-200">
+                {users.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">No registered users</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+                        <tr>
+                          <th className="px-6 py-4 text-left font-semibold">Username</th>
+                          <th className="px-6 py-4 text-left font-semibold">Email</th>
+                          <th className="px-6 py-4 text-left font-semibold">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-amber-100">
+                        {users.map((u) => (
+                          <tr key={u.username} className="hover:bg-amber-50 transition">
+                            <td className="px-6 py-4 font-semibold text-amber-900">👤 {u.username}</td>
+                            <td className="px-6 py-4 text-gray-600">{u.email || "-"}</td>
+                            <td className="px-6 py-4">
+                              <button
+                                onClick={() => removeUser(u.username)}
+                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
 
-            <div className="bg-white rounded shadow p-4">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b">
-                    <th className="p-2">Name</th>
-                    <th className="p-2">Price</th>
-                    <th className="p-2">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {menu
-                    .filter((item) => item.category === "Specials")
-                    .map((item) => (
-                      <tr key={item.id} className="border-b hover:bg-gray-50">
-                        <td className="p-2">{item.name}</td>
-                        <td className="p-2">₹{item.price}</td>
-                        <td className="p-2">
-                          <button
-                            onClick={() => removeSpecial(item.id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-      </main>
+          {view === "Settings" && (
+            <>
+              <div className="mb-8">
+                <h2 className="text-4xl font-bold text-amber-900 mb-2">Settings</h2>
+                <p className="text-amber-700">Golden Essence Restaurant Information</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white to-amber-50 border-2 border-amber-300 rounded-xl shadow-lg p-8 max-w-2xl">
+                <div className="space-y-6">
+                  <div className="border-b border-amber-200 pb-4">
+                    <label className="block text-amber-900 font-semibold mb-2">🍴 Restaurant Name</label>
+                    <p className="text-2xl font-bold text-amber-700">Golden Essence</p>
+                  </div>
+                  
+                  <div className="border-b border-amber-200 pb-4">
+                    <label className="block text-amber-900 font-semibold mb-2">🕐 Operating Hours</label>
+                    <p className="text-lg text-gray-700">10:00 AM - 11:00 PM (Daily)</p>
+                  </div>
+                  
+                  <div className="border-b border-amber-200 pb-4">
+                    <label className="block text-amber-900 font-semibold mb-2">📧 Contact Email</label>
+                    <p className="text-lg text-gray-700">info@goldenessence.com</p>
+                  </div>
+                  
+                  <div className="border-b border-amber-200 pb-4">
+                    <label className="block text-amber-900 font-semibold mb-2">📱 Phone Number</label>
+                    <p className="text-lg text-gray-700">+91 98765 43210</p>
+                  </div>
+                  
+                  <div className="pb-4">
+                    <label className="block text-amber-900 font-semibold mb-2">📍 Location</label>
+                    <p className="text-lg text-gray-700">Bangalore, Karnataka, India</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

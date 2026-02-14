@@ -61,20 +61,33 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900">
-      <div className="w-[850px] h-[500px] flex rounded-lg shadow-2xl relative overflow-hidden border border-cyan-400">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/30 to-teal-500/30 blur-2xl"></div>
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-amber-50 to-white">
+      {/* Navigation Bar */}
+      <nav className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
+        <Link to="/" className="font-medium hover:text-amber-200 transition hidden md:block">Home</Link>
+        <button
+          onClick={() => navigate(-1)}
+          className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
+        >
+          ← Back
+        </button>
+      </nav>
+
+      <div className="flex justify-center items-center flex-1">
+        <div className="w-[850px] h-[500px] flex rounded-lg shadow-2xl relative overflow-hidden border border-amber-400">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/30 to-amber-600/30 blur-2xl"></div>
 
         {/* Left Side */}
-        <div className="w-1/2 bg-gradient-to-br from-cyan-500 to-teal-500 text-white flex flex-col justify-center items-center p-8 relative z-10">
-          <h2 className="text-3xl font-extrabold">WELCOME BACK!</h2>
+        <div className="w-1/2 bg-gradient-to-br from-amber-500 to-amber-600 text-white flex flex-col justify-center items-center p-8 relative z-10">
+          <h2 className="text-3xl font-extrabold">WELCOME</h2>
         </div>
 
         {/* Right Side */}
-        <div className="w-1/2 bg-gray-900 flex flex-col justify-center p-10 relative z-10">
-          <h2 className="text-2xl font-semibold mb-6 text-white">Sign Up</h2>
+        <div className="w-1/2 bg-white flex flex-col justify-center p-10 relative z-10">
+          <h2 className="text-2xl font-semibold mb-6 text-amber-900">Sign Up</h2>
 
-          <form className="space-y-6 text-white" onSubmit={handleSubmit}>
+          <form className="space-y-6 text-gray-800" onSubmit={handleSubmit}>
             {/* Username */}
             <div className="relative">
               <input
@@ -134,20 +147,21 @@ const Signup = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 rounded-full bg-gradient-to-r from-cyan-400 to-teal-500 hover:from-teal-500 hover:to-cyan-400 transition font-semibold"
+              className="w-full py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition font-semibold text-white"
             >
               Sign Up
             </button>
             {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
           </form>
 
-          <p className="mt-4 text-sm text-center text-gray-400">
+          <p className="mt-4 text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <Link to="/Login" className="text-cyan-400 font-bold">
+            <Link to="/Login" className="text-amber-600 font-bold hover:text-amber-700">
               Login
             </Link>
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

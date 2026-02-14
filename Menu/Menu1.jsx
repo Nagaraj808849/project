@@ -374,89 +374,65 @@ export default function MenuPage() {
   const categories = ["All", "Starters", "Main Course", "Desserts", "Drinks", "Specials"];
 
   return (
-    <div className="p-6">
-      {/* HEADER */}
-      <div className="flex justify-between mb-6 items-center">
-        <h1 className="text-3xl font-bold">Menu</h1>
-
-        <div className="flex items-center gap-4 relative">
-          {/* 🛒 Cart */}
-          <Link to="/cart" className="bg-green-600 text-white px-4 py-2 rounded">
-            🛒 View Cart
+    <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 to-white">
+      {/* Navigation Bar */}
+      <nav className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
+        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
+        <ul className="hidden md:flex space-x-8">
+          <li><Link to="/Homepage1" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Home</Link></li>
+          <li><a href="#menu" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Menu</a></li>
+          <li><Link to="/TableOrder" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Book Table</Link></li>
+        </ul>
+        <div className="flex items-center gap-4">
+          <Link to="/cart" className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded font-semibold transition">
+            🛒 Cart
           </Link>
-
-          {/* 👤 User Profile */}
-          {currentUser && (
-            <div className="relative">
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="bg-gray-800 text-white px-4 py-2 rounded-full"
-              >
-                👤 {currentUser.username}
-              </button>
-
-              {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-lg z-50">
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    📊 Dashboard
-                  </Link>
-
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    🧾 Profile
-                  </Link>
-
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
-                  >
-                    🚪 Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* CATEGORY BUTTONS */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        {categories.map((cat) => (
           <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-4 py-2 rounded-full font-semibold transition ${
-              selectedCategory === cat
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-blue-200"
-            }`}
+            onClick={() => navigate(-1)}
+            className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
           >
-            {cat}
+            ← Back
           </button>
-        ))}
-      </div>
+        </div>
+      </nav>
 
-      {/* MENU ITEMS */}
-      <div className="grid md:grid-cols-3 gap-6">
-        {filteredItems.map((item) => (
-          <div key={item.id} className="bg-white shadow p-4 rounded">
-            <img src={item.image} className="h-40 w-full object-cover" alt={item.name} />
-            <h2 className="font-semibold">{item.name}</h2>
-            <p className="text-gray-500 text-sm">{item.description}</p>
-            <p className="font-bold">{item.price}</p>
+      {/* Main Content */}
+      {/* Main Content */}
+      <div className="p-6">
+        {/* CATEGORY BUTTONS */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          {categories.map((cat) => (
             <button
-              onClick={() => addToCart(item)}
-              className="bg-blue-500 text-white px-3 py-1 mt-2 rounded"
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-full font-semibold transition ${
+                selectedCategory === cat
+                  ? "bg-amber-600 text-white"
+                  : "bg-amber-100 text-amber-900 hover:bg-amber-200"
+              }`}
             >
-              Add to Cart
+              {cat}
             </button>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* MENU ITEMS */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {filteredItems.map((item) => (
+            <div key={item.id} className="bg-white shadow p-4 rounded">
+              <img src={item.image} className="h-40 w-full object-cover" alt={item.name} />
+              <h2 className="font-semibold">{item.name}</h2>
+              <p className="text-gray-500 text-sm">{item.description}</p>
+              <p className="font-bold">{item.price}</p>
+              <button
+                onClick={() => addToCart(item)}
+                className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 mt-2 rounded font-semibold transition"
+              >
+                Add to Cart
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

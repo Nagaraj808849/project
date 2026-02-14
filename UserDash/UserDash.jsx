@@ -36,12 +36,20 @@ export default function UserDash() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white">
       {/* Header */}
       <header className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center gap-3">
-          <h1 className="font-bold text-2xl">🍴 Golden Essence</h1>
-          <span className="text-sm text-amber-100">User Dashboard</span>
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded transition"
+          >
+            ← Back
+          </button>
+          <div>
+            <h1 className="font-bold text-2xl">🍴 Golden Essence</h1>
+            <span className="text-sm text-amber-100">User Dashboard</span>
+          </div>
         </div>
 
         <div className="relative">
@@ -59,7 +67,7 @@ export default function UserDash() {
                   setView("profile");
                   setMenuOpen(false);
                 }}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2 hover:bg-amber-50"
               >
                 Update Profile
               </button>
@@ -68,7 +76,7 @@ export default function UserDash() {
                   setView("orders");
                   setMenuOpen(false);
                 }}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2 hover:bg-amber-50"
               >
                 Order Details
               </button>
@@ -97,34 +105,34 @@ export default function UserDash() {
             <h2 className="text-lg font-semibold mb-4">👤 Update Profile</h2>
             <div className="space-y-4">
               <input
-                className="w-full border p-2 rounded"
+                className="w-full border border-amber-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                 value={profile.name}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
               />
               <input
-                className="w-full border p-2 rounded"
+                className="w-full border border-amber-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
               />
               <input
-                className="w-full border p-2 rounded"
+                className="w-full border border-amber-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
               />
               <textarea
-                className="w-full border p-2 rounded"
+                className="w-full border border-amber-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                 value={profile.address}
                 onChange={(e) => setProfile({ ...profile, address: e.target.value })}
               />
               <button
                 onClick={updateUserProfile}
-                className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700"
+                className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700 font-semibold transition"
               >
                 Save Changes
               </button>
               <button
                 onClick={() => setView("home")}
-                className="w-full border py-2 rounded"
+                className="w-full border border-amber-500 text-amber-600 py-2 rounded hover:bg-amber-50 font-semibold transition"
               >
                 Back
               </button>
@@ -178,7 +186,7 @@ export default function UserDash() {
             
             <button
               onClick={() => setView("home")}
-              className="mt-4 border px-4 py-2 rounded hover:bg-gray-50"
+              className="mt-4 border border-amber-500 text-amber-600 px-4 py-2 rounded hover:bg-amber-50 font-semibold transition"
             >
               Back
             </button>

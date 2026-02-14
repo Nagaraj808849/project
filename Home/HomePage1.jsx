@@ -1,4 +1,4 @@
-import { ShoppingCart, Home, Menu, Phone, HelpCircle, ChevronRight, ChevronLeft, UtensilsCrossed, User, LogOut } from "lucide-react";
+import { ShoppingCart, Home, Menu, Phone, HelpCircle, ChevronRight, ChevronLeft, UtensilsCrossed, User, LogOut, Mail, MapPin } from "lucide-react";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../src/context/useAuth";
@@ -145,7 +145,6 @@ export default function Navigation() {
           <p className="mt-4 text-lg">A t aste of prestige, plated in perfection</p>
           {!user && (
             <p className="mt-6 text-amber-300 text-lg font-semibold">
-              👉 Click any button to Login or Signup and explore our restaurant
             </p>
           )}
         </div>
@@ -227,6 +226,62 @@ export default function Navigation() {
           </button>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="w-full bg-gray-900 text-white py-12">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            {/* About */}
+            <div>
+              <h3 className="text-2xl font-bold text-amber-500 mb-4">🍴 Golden Essence</h3>
+              <p className="text-gray-300">Experience exquisite dining with traditional recipes and modern ambiance. Your satisfaction is our priority.</p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h4 className="text-xl font-semibold text-amber-500 mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li><Link to="/" className="hover:text-amber-400 transition">Home</Link></li>
+                <li><Link to="/Menu1" className="hover:text-amber-400 transition">Menu</Link></li>
+                <li><Link to="/TableOrder" className="hover:text-amber-400 transition">Book Table</Link></li>
+                <li><Link to="/UserDash" className="hover:text-amber-400 transition">Dashboard</Link></li>
+              </ul>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h4 className="text-xl font-semibold text-amber-500 mb-4">Contact Us</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li className="flex items-center gap-2">
+                  <Phone size={18} className="text-amber-400"/>
+                  +91 98765 43210
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail size={18} className="text-amber-400"/>
+                  info@goldenessence.com
+                </li>
+                <li className="flex items-center gap-2">
+                  <MapPin size={18} className="text-amber-400"/>
+                  Bangalore, Karnataka
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <hr className="border-gray-700 mb-6" />
+
+          {/* Bottom Section */}
+          <div className="flex flex-col md:flex-row justify-between items-center text-gray-400 text-sm">
+            <p>&copy; 2024 Golden Essence Restaurant. All rights reserved.</p>
+            <div className="flex gap-4 mt-4 md:mt-0">
+              <a href="#" className="hover:text-amber-400 transition">Privacy Policy</a>
+              <a href="#" className="hover:text-amber-400 transition">Terms & Conditions</a>
+              <a href="#" className="hover:text-amber-400 transition">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
