@@ -1,4 +1,4 @@
-import { ShoppingCart, Home, Menu, Phone, HelpCircle, ChevronRight, ChevronLeft, UtensilsCrossed, User, LogOut, Mail, MapPin } from "lucide-react";
+import { ShoppingCart, Home, Menu, Phone, HelpCircle, ChevronRight, ChevronLeft, UtensilsCrossed, User, LogOut, Mail, MapPin, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../src/context/useAuth";
@@ -11,6 +11,7 @@ export default function Navigation() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const scrollRight1 = () => {
     if (scrollRef1.current) {
@@ -72,77 +73,196 @@ export default function Navigation() {
         }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
-        <nav className="absolute top-0 left-0 w-full z-50">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">🍴 Golden Essence</h1>
-            <ul className="flex space-x-8">
-              <li><a href="#home" className="flex items-center gap-2 text-white font-medium hover:text-amber-600"><Home size={20}/> Home</a></li>
-              <li>
-                <button onClick={() => handleProtectedAction("/Menu1")} className="flex items-center gap-2 text-white font-medium hover:text-amber-600">
-                  <Menu size={20}/> Menu
-                </button>
-              </li>
-              <li><a href="#interiors" className="flex items-center gap-2 text-white font-medium hover:text-amber-600"><HelpCircle size={20}/> Interiors</a></li>
-              <li><a href="#book" className="flex items-center gap-2 text-white font-medium hover:text-amber-600"><UtensilsCrossed size={20}/> Book</a></li>
-              <li><a href="#contact" className="flex items-center gap-2 text-white font-medium hover:text-amber-600"><Phone size={20}/> Contact</a></li>
-            </ul>
-            <div className="flex items-center gap-6">
-              <button onClick={() => handleProtectedAction("/Cart")} className="relative cursor-pointer text-white hover:text-amber-600">
-                <ShoppingCart size={24}/>
-              </button>
+        <nav className="absolute top-0 left-0 w-full z-50 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 backdrop-blur-md border-b border-amber-500/50 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            {/* Navbar Header - Logo and Toggle */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-xl sm:text-2xl font-bold text-white drop-shadow-lg">🍴 Golden Essence</h1>
               
-              {user ? (
-                <div className="relative">
-                  <button
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    className="relative cursor-pointer text-white hover:text-amber-600"
-                  >
-                    <User size={24}/>
-                  </button>
-                  {menuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-50">
-                      <div className="px-4 py-2 border-b">
-                        <p className="font-semibold text-sm">{user.username}</p>
-                        <p className="text-xs text-gray-600">{user.email}</p>
-                      </div>
-                      <Link to="/UserDash">
-                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                          Profile
+              {/* Desktop Menu */}
+              <div className="hidden md:flex items-center gap-8">
+                <ul className="flex space-x-6">
+                  <li><a href="#home" className="flex items-center gap-2 text-white font-medium hover:text-amber-600 transition"><Home size={20}/> <span className="hidden lg:inline">Home</span></a></li>
+                  <li>
+                    <button onClick={() => handleProtectedAction("/Menu1")} className="flex items-center gap-2 text-white font-medium hover:text-amber-600 transition">
+                      <Menu size={20}/> <span className="hidden lg:inline">Menu</span>
+                    </button>
+                  </li>
+                  <li><a href="#interiors" className="flex items-center gap-2 text-white font-medium hover:text-amber-600 transition"><HelpCircle size={20}/> <span className="hidden lg:inline">Interiors</span></a></li>
+                  <li><a href="#book" className="flex items-center gap-2 text-white font-medium hover:text-amber-600 transition"><UtensilsCrossed size={20}/> <span className="hidden lg:inline">Book</span></a></li>
+                  <li><a href="#contact" className="flex items-center gap-2 text-white font-medium hover:text-amber-600 transition"><Phone size={20}/> <span className="hidden lg:inline">Contact</span></a></li>
+                </ul>
+              </div>
+
+              {/* Desktop Right Section */}
+              <div className="hidden md:flex items-center gap-6">
+                <button onClick={() => handleProtectedAction("/Cart")} className="relative cursor-pointer text-white hover:text-amber-600 transition">
+                  <ShoppingCart size={24}/>
+                </button>
+                
+                {user ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setMenuOpen(!menuOpen)}
+                      className="relative cursor-pointer text-white hover:text-amber-600 transition"
+                    >
+                      <User size={24}/>
+                    </button>
+                    {menuOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-50">
+                        <div className="px-4 py-2 border-b">
+                          <p className="font-semibold text-sm">{user.username}</p>
+                          <p className="text-xs text-gray-600">{user.email}</p>
+                        </div>
+                        <Link to="/UserDash">
+                          <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                            Profile
+                          </button>
+                        </Link>
+                        <button
+                          onClick={() => {
+                            logout();
+                            navigate("/");
+                            setMenuOpen(false);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 flex items-center gap-2"
+                        >
+                          <LogOut size={16} /> Logout
                         </button>
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout();
-                          navigate("/");
-                          setMenuOpen(false);
-                        }}
-                        className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 flex items-center gap-2"
-                      >
-                        <LogOut size={16} /> Logout
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <Link to="/Login">
+                      <button className="bg-black hover:bg-amber-200 text-white px-4 py-2 rounded-lg transition">
+                        Login
                       </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <Link to="/Login">
-                    <button className="bg-black hover:bg-amber-200 text-white px-4 py-2 rounded-lg transition">
-                      Login
-                    </button>
-                  </Link>
-                  <Link to="/Signup">
-                    <button className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
-                      Signup
-                    </button>
-                  </Link>
-                </>
-              )}
+                    </Link>
+                    <Link to="/Signup">
+                      <button className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition">
+                        Signup
+                      </button>
+                    </Link>
+                  </>
+                )}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center gap-4">
+                <button onClick={() => handleProtectedAction("/Cart")} className="text-white hover:text-amber-600 transition">
+                  <ShoppingCart size={22}/>
+                </button>
+                <button
+                  onClick={() => setMobileNavOpen(!mobileNavOpen)}
+                  className="text-white hover:text-amber-600 transition p-2 hover:bg-white/10 rounded-lg"
+                >
+                  {mobileNavOpen ? <X size={26} /> : <Menu size={26} />}
+                </button>
+              </div>
             </div>
+
+            {/* Mobile Menu */}
+            {mobileNavOpen && (
+              <div className="md:hidden mt-4 pb-6 border-t border-amber-600/30 pt-6 animate-in fade-in slide-in-from-top-2">
+                {/* Mobile Navigation Links */}
+                <ul className="space-y-1 mb-6">
+                  <li>
+                    <a 
+                      href="#home" 
+                      onClick={() => setMobileNavOpen(false)} 
+                      className="flex items-center gap-3 text-white font-medium hover:bg-white/10 p-3 rounded-lg transition"
+                    >
+                      <Home size={20}/> Home
+                    </a>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => { 
+                        handleProtectedAction("/Menu1"); 
+                        setMobileNavOpen(false); 
+                      }} 
+                      className="w-full flex items-center gap-3 text-white font-medium hover:bg-white/10 p-3 rounded-lg transition text-left"
+                    >
+                      <Menu size={20}/> Menu
+                    </button>
+                  </li>
+                  <li>
+                    <a 
+                      href="#interiors" 
+                      onClick={() => setMobileNavOpen(false)} 
+                      className="flex items-center gap-3 text-white font-medium hover:bg-white/10 p-3 rounded-lg transition"
+                    >
+                      <HelpCircle size={20}/> Interiors
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#book" 
+                      onClick={() => setMobileNavOpen(false)} 
+                      className="flex items-center gap-3 text-white font-medium hover:bg-white/10 p-3 rounded-lg transition"
+                    >
+                      <UtensilsCrossed size={20}/> Book
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="#contact" 
+                      onClick={() => setMobileNavOpen(false)} 
+                      className="flex items-center gap-3 text-white font-medium hover:bg-white/10 p-3 rounded-lg transition"
+                    >
+                      <Phone size={20}/> Contact
+                    </a>
+                  </li>
+                </ul>
+
+                {/* Mobile Divider */}
+                <div className="h-px bg-amber-600/30 my-4"></div>
+
+                {/* Mobile User Section */}
+                {user ? (
+                  <div className="space-y-2">
+                    <div className="bg-white/5 p-3 rounded-lg mb-3">
+                      <p className="text-white font-semibold text-sm">{user.username}</p>
+                      <p className="text-amber-600/70 text-xs">{user.email}</p>
+                    </div>
+                    <Link to="/UserDash" onClick={() => setMobileNavOpen(false)}>
+                      <button className="w-full flex items-center gap-3 text-white font-medium hover:bg-white/10 p-3 rounded-lg transition text-left">
+                        <User size={20}/> Profile
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        navigate("/");
+                        setMobileNavOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 text-red-400 font-medium hover:bg-red-500/10 p-3 rounded-lg transition text-left"
+                    >
+                      <LogOut size={20}/> Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link to="/Login" onClick={() => setMobileNavOpen(false)}>
+                      <button className="w-full bg-black hover:bg-black/80 text-white px-4 py-2.5 rounded-lg transition font-medium text-sm">
+                        Login
+                      </button>
+                    </Link>
+                    <Link to="/Signup" onClick={() => setMobileNavOpen(false)}>
+                      <button className="w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-lg transition font-medium text-sm">
+                        Signup
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </nav>
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white">
           <h2 className="text-5xl font-extrabold drop-shadow-lg">Welcome to Golden Essence</h2>
-          <p className="mt-4 text-lg">A t aste of prestige, plated in perfection</p>
+          <p className="mt-4 text-lg">A taste of prestige, plated in perfection</p>
           {!user && (
             <p className="mt-6 text-amber-300 text-lg font-semibold">
             </p>

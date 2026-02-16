@@ -12,10 +12,15 @@ const Login = () => {
     username: "",
     password: "",
   });
-
+ 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/Homepage1");
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (currentUser?.role === "admin") {
+        navigate("/Admin");
+      } else {
+        navigate("/Homepage1");
+      }
     }
   }, [isAuthenticated, navigate]);
 

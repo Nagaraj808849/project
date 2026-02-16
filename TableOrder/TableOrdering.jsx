@@ -7,7 +7,7 @@ const TableOrder = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const submit = (data) => {
-    alert("Table booked successfully! 🎉");
+    alert("Table booked successfully!");
     console.log(data); 
     reset(); 
   };

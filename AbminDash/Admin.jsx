@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BarChart3, Users, ShoppingCart, TrendingUp, Settings, LogOut } from "lucide-react";
+import { useAuth } from "../src/context/useAuth";
 
 const initialMenu = [
   { id: 1, name: "Paneer Tikka", category: "Specials", price: 300 },
@@ -10,6 +11,7 @@ const initialMenu = [
 
 export default function Admin() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [menu, setMenu] = useState(() => {
     const storedMenu = localStorage.getItem("menu");
     return storedMenu ? JSON.parse(storedMenu) : initialMenu;
@@ -100,7 +102,7 @@ export default function Admin() {
             <p className="text-amber-100 text-sm mt-1">Restaurant Management System</p>
           </div>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => { logout(); navigate("/Login"); }}
             className="flex items-center gap-2 bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg font-semibold transition"
           >
             <LogOut size={20} />
