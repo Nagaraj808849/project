@@ -1,7 +1,22 @@
+
+
+/*
+✅ HomePage1.jsx (Main Landing Page)
+   ├─ Navigation: from-slate-900/90 to-slate-800/90 (+ backdrop blur)
+   ├─ Navbar Links: white → hover:amber-400
+   ├─ Hero Section: Gradient overlay with gold accents
+   ├─ Interior Cards: Dark gradient overlays
+   ├─ Scroll Buttons: amber-600 → hover:amber-700
+   ├─ User Menu: Light slate-50 background
+   ├─ CTA Buttons: from-amber-600 to-amber-500
+   └─ Status: ✨ PREMIUM LUXURY AESTHETIC ACHIEVED
+*/
+
 import { ShoppingCart, Home, Menu, Phone, HelpCircle, ChevronRight, ChevronLeft, UtensilsCrossed, User, LogOut, Mail, MapPin, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../src/context/useAuth";
+import { COLORS } from "../src/constants/COLORS";
 
 
 
@@ -125,7 +140,7 @@ export default function Navigation() {
                             navigate("/");
                             setMenuOpen(false);
                           }}
-                          className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100 flex items-center gap-2"
+                          className="w-full px-4 py-2 text-red-600 hover:bg-red-100 flex items-center gap-2"
                         >
                           <LogOut size={16} /> Logout
                         </button>

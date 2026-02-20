@@ -1,7 +1,31 @@
+/**
+ * 🔐 LOGIN COMPONENT - GOLDEN ESSENCE RESTAURANT
+ * 
+ * COLOR SCHEME: Dark Theme with Gold Accents
+ * - Page Background: min-h-screen bg-gradient-to-br from-slate-900 to-slate-800
+ * - Form Container: bg-slate-900 with border-amber-500
+ * - Input Fields: bg-transparent, border-b border-slate-600, focus:border-amber-400
+ * - Icons: text-amber-400
+ * - Buttons: from-amber-600 to-amber-500, hover:from-amber-700 hover:to-amber-600
+ * - Right Panel: from-amber-600 to-amber-700
+ * 
+ * TAILWIND CLASSES:
+ * - Container: w-[850px] flex rounded-lg shadow-2xl border-amber-500
+ * - Form Panel: bg-slate-900 p-10
+ * - Input: border-b border-slate-600 focus:border-amber-400 text-white
+ * - Button: from-amber-600 to-amber-500 text-white py-2 rounded-lg
+ * - Right Panel: from-amber-600 to-amber-700 text-white
+ * 
+ * Color values defined in: src/constants/COLORS.js
+ *
+ * ✅ IMPLEMENTATION STATUS: ✨ ELEGANT AUTH FLOW
+ */
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useAuth } from "../src/context/useAuth";
+import { COLORS } from "../src/constants/COLORS";
 
 const Login = () => {
   const navigate = useNavigate();

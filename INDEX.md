@@ -86,6 +86,16 @@ This document serves as your guide to understanding and using the authentication
 - Final status
 - **Read time:** 10-15 minutes
 
+### 8. **Color Scheme Guide**
+**Location:** `src/constants/COLORS.js`
+**Best for:** Understanding design colors and styling
+- Primary colors (Navy & Gold palette)
+- Component-specific color mappings
+- Text and border colors
+- Shadows and transitions
+- Hex color codes
+- Usage examples
+
 ---
 
 ## 🗂️ Core Implementation Files
@@ -276,6 +286,7 @@ Follow complete test procedures in [QUICKSTART.md](QUICKSTART.md)
 - `ARCHITECTURE_DIAGRAMS.md` - Diagrams
 - `ADVANCED_AUTH_PATTERNS.md` - Advanced topics
 - `COMPLETION_CHECKLIST.md` - Verification
+- `src/constants/COLORS.js` - Color palette & styling
 
 ---
 

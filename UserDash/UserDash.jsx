@@ -1,6 +1,9 @@
+
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../src/context/useAuth";
+import { COLORS } from "../src/constants/COLORS";
 
 export default function UserDash() {
   const navigate = useNavigate();

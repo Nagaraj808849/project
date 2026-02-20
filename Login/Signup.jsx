@@ -1,7 +1,24 @@
+/**
+ * 📝 SIGNUP COMPONENT - GOLDEN ESSENCE RESTAURANT
+ * 
+ * COLOR SCHEME: Dark Theme with Gold Accents
+ * - Page Background: min-h-screen bg-gradient-to-br from-slate-900 to-slate-800
+ * - Form Container: bg-slate-900 with border-amber-500
+ * - Input Fields: bg-transparent, border-b border-slate-600, focus:border-amber-400
+ * - Icons: text-amber-400
+ * - Buttons: from-amber-600 to-amber-500, hover:from-amber-700 hover:to-amber-600
+ * - Left Panel: from-amber-600 to-amber-700
+ * 
+ * Color values defined in: src/constants/COLORS.js
+ *
+ * ✅ IMPLEMENTATION STATUS: ✨ COHESIVE AUTH EXPERIENCE
+ */
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { useAuth } from "../src/context/useAuth";
+import { COLORS } from "../src/constants/COLORS";
 
 const Signup = () => {
   const navigate = useNavigate();

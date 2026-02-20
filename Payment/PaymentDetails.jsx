@@ -1,6 +1,30 @@
+/**
+ * 💳 PAYMENT DETAILS COMPONENT - GOLDEN ESSENCE RESTAURANT
+ * 
+ * COLOR SCHEME: Dark Theme with Amber Accents
+ * - Page Background: from-slate-900 to-slate-800
+ * - Card Background: bg-slate-800 with border-amber-600
+ * - Order Summary: Dark text (slate-300) with amounts in text-amber-400
+ * - Button: from-amber-600 to-amber-500, hover:from-amber-700 hover:to-amber-600
+ * - Loading/Processing: border-amber-600 with animate-spin
+ * - Success Modal: bg-slate-800 with border-amber-600, text-amber-400
+ * 
+ * TAILWIND CLASSES:
+ * - Card: bg-slate-800 border border-amber-600 rounded-lg p-6 shadow-lg
+ * - Heading: text-white text-xl font-bold
+ * - Amount: text-amber-400 font-bold
+ * - Button: from-amber-600 to-amber-500 text-white w-full py-3 rounded-lg
+ * - Loader: border-4 border-amber-600 border-t-transparent rounded-full animate-spin
+ * 
+ * Color values defined in: src/constants/COLORS.js
+ *
+ * ✅ IMPLEMENTATION STATUS: ✨ SECURE PAYMENT EXPERIENCE
+ */
+
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../src/context/useAuth";
+import { COLORS } from "../src/constants/COLORS";
 
 export default function PaymentPage() {
   const navigate = useNavigate();
