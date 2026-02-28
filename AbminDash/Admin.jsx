@@ -95,30 +95,6 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-50">
-      {/* Top Header */}
-      <header className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-4 sm:px-8 py-4 sm:py-6 shadow-lg">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl sm:text-4xl font-bold">🍴 Golden Essence</h1>
-            <p className="text-amber-100 text-xs sm:text-sm mt-1">Restaurant Management System</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden text-white hover:bg-amber-500 p-2 rounded-lg transition"
-            >
-              {sidebarOpen ? <X size={24} /> : <MenuIcon size={24} />}
-            </button>
-            <button
-              onClick={() => { logout(); navigate("/Login"); }}
-              className="flex items-center gap-2 bg-amber-800 hover:bg-amber-900 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold transition text-sm sm:text-base"
-            >
-              <LogOut size={18} />
-              <span className="hidden sm:inline">Exit Admin</span>
-            </button>
-          </div>
-        </div>
-      </header>
 
       {/* Main Container */}
       <div className="flex min-h-[calc(100vh-100px)] relative">

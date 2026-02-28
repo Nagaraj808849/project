@@ -40,59 +40,6 @@ export default function UserDash() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded transition"
-          >
-            ← Back
-          </button>
-          <div>
-            <h1 className="font-bold text-2xl">🍴 Golden Essence</h1>
-            <span className="text-sm text-amber-100">User Dashboard</span>
-          </div>
-        </div>
-
-        <div className="relative">
-          <img
-            src="https://i.pravatar.cc/40"
-            alt="profile"
-            className="rounded-full border-2 border-white cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
-          />
-
-          {menuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow">
-              <button
-                onClick={() => {
-                  setView("profile");
-                  setMenuOpen(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-amber-50"
-              >
-                Update Profile
-              </button>
-              <button
-                onClick={() => {
-                  setView("orders");
-                  setMenuOpen(false);
-                }}
-                className="block w-full text-left px-4 py-2 hover:bg-amber-50"
-              >
-                Order Details
-              </button>
-              <button
-                onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
-              >
-                Log Out
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
 
       {/* Content */}
       <main className="p-6 max-w-4xl mx-auto">

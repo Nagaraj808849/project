@@ -1,34 +1,41 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 const TableOrder = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
 
+  // ✅ Get current date-time in local timezone
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().slice(0, 16);
+  };
+
+  const minDateTime = getCurrentDateTime();
+
   const submit = (data) => {
     alert("Table booked successfully!");
-    console.log(data); 
-    reset(); 
+    console.log(data);
+    reset();
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 to-white flex flex-col items-center py-10 px-4">
-      <nav className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg mb-10 rounded-lg">
-        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
-        <div className="flex items-center gap-4">
-          <Link to="/Homepage1" className="font-medium hover:text-amber-200 transition hidden md:block">Home</Link>
-          <Link to="/Menu1" className="font-medium hover:text-amber-200 transition hidden md:block">Menu</Link>
-          <button
-            onClick={() => navigate(-1)}
-            className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
-          >
-            ← Back
-          </button>
-        </div>
-      </nav>
-      <div className="w-full"></div>
-      <div className="text-center mb-8">
+    <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 to-white flex flex-col items-center py-10 px-4 relative">
+
+      {/* 🔙 Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="absolute top-6 left-6 flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg shadow-md transition"
+      >
+        <ArrowLeft size={18} />
+        Back
+      </button>
+
+      {/* Heading */}
+      <div className="text-center mb-8 mt-8">
         <p className="text-3xl md:text-4xl font-bold text-amber-900 tracking-wide">
           Reservation
         </p>
@@ -37,11 +44,13 @@ const TableOrder = () => {
         </p>
       </div>
 
+      {/* Form */}
       <form
         className="w-full max-w-3xl bg-white rounded-2xl p-6 md:p-10 shadow-lg border-2 border-amber-200"
         onSubmit={handleSubmit(submit)}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
           <input
             type="text"
             placeholder="USER NAME"
@@ -49,6 +58,7 @@ const TableOrder = () => {
             {...register("username")}
             className="w-full h-12 px-4 rounded-md bg-white text-black border border-amber-300 focus:ring-2 focus:ring-amber-500 outline-none"
           />
+
           <input
             type="email"
             placeholder="USER EMAIL"
@@ -56,12 +66,15 @@ const TableOrder = () => {
             {...register("email")}
             className="w-full h-12 px-4 rounded-md bg-white text-black border border-amber-300 focus:ring-2 focus:ring-amber-500 outline-none"
           />
+
           <input
             type="datetime-local"
+            min={minDateTime}
             required
-            {...register("date&time")}
+            {...register("dateTime")}
             className="w-full h-12 px-4 rounded-md bg-white text-black border border-amber-300 focus:ring-2 focus:ring-amber-500 outline-none"
           />
+
           <input
             list="browse"
             placeholder="NO OF PEOPLE"
@@ -69,6 +82,7 @@ const TableOrder = () => {
             {...register("noOfPeople")}
             className="w-full h-12 px-4 rounded-md bg-white text-black border border-amber-300 focus:ring-2 focus:ring-amber-500 outline-none"
           />
+
           <datalist id="browse">
             <option value="2" />
             <option value="3" />

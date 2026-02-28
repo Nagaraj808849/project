@@ -1,25 +1,3 @@
-/**
- * 🔐 LOGIN COMPONENT - GOLDEN ESSENCE RESTAURANT
- * 
- * COLOR SCHEME: Dark Theme with Gold Accents
- * - Page Background: min-h-screen bg-gradient-to-br from-slate-900 to-slate-800
- * - Form Container: bg-slate-900 with border-amber-500
- * - Input Fields: bg-transparent, border-b border-slate-600, focus:border-amber-400
- * - Icons: text-amber-400
- * - Buttons: from-amber-600 to-amber-500, hover:from-amber-700 hover:to-amber-600
- * - Right Panel: from-amber-600 to-amber-700
- * 
- * TAILWIND CLASSES:
- * - Container: w-[850px] flex rounded-lg shadow-2xl border-amber-500
- * - Form Panel: bg-slate-900 p-10
- * - Input: border-b border-slate-600 focus:border-amber-400 text-white
- * - Button: from-amber-600 to-amber-500 text-white py-2 rounded-lg
- * - Right Panel: from-amber-600 to-amber-700 text-white
- * 
- * Color values defined in: src/constants/COLORS.js
- *
- * ✅ IMPLEMENTATION STATUS: ✨ ELEGANT AUTH FLOW
- */
 
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -107,17 +85,6 @@ const Login = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-amber-50 to-white">
-      {/* Navigation Bar */}
-      <nav className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
-        <Link to="/" className="font-medium hover:text-amber-200 transition hidden md:block">Home</Link>
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
-        >
-          ← Back
-        </button>
-      </nav>
 
       <div className="flex justify-center items-center flex-1">
         <div className="w-[850px] h-[500px] flex rounded-lg shadow-2xl relative overflow-hidden border border-amber-400">

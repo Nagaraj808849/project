@@ -82,20 +82,6 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white">
-      {/* Navigation Bar */}
-      <nav className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
-        <ul className="hidden md:flex space-x-8">
-          <li><Link to="/Homepage1" className="font-medium hover:text-amber-200 transition">Home</Link></li>
-          <li><Link to="/Menu1" className="font-medium hover:text-amber-200 transition">Menu</Link></li>
-        </ul>
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
-        >
-          ← Back
-        </button>
-      </nav>
 
       <div className="flex items-center justify-center p-4 min-h-[calc(100vh-80px)]">
         <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6">

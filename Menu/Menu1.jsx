@@ -336,6 +336,7 @@ const menuItems = [
 ];
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart } from "lucide-react";
 
 // (menuItems array remains EXACTLY as you sent)
 
@@ -375,29 +376,20 @@ export default function MenuPage() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 to-white">
-      {/* Navigation Bar */}
-      <nav className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
-        <ul className="hidden md:flex space-x-8">
-          <li><Link to="/Homepage1" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Home</Link></li>
-          <li><a href="#menu" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Menu</a></li>
-          <li><Link to="/TableOrder" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Book Table</Link></li>
-        </ul>
-        <div className="flex items-center gap-4">
-          <Link to="/cart" className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded font-semibold transition">
-            🛒 Cart
-          </Link>
-          <button
-            onClick={() => navigate(-1)}
-            className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
-          >
-            ← Back
-          </button>
-        </div>
-      </nav>
 
-      {/* Main Content */}
-      {/* Main Content */}
+      {/* Header with back button and cart link */}
+      <div className="flex items-center justify-between p-4 bg-white shadow">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-amber-900 hover:text-amber-600 transition"
+        >
+          ← Back
+        </button>
+        <Link to="/cart" className="text-amber-900 hover:text-amber-600 transition">
+          <ShoppingCart size={24} />
+        </Link>
+      </div>
+
       <div className="p-6">
         {/* CATEGORY BUTTONS */}
         <div className="flex flex-wrap gap-3 mb-6">

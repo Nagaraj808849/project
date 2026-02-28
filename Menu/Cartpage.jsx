@@ -45,22 +45,6 @@ function CartPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white flex flex-col items-center">
-      {/* Navigation Bar */}
-      <nav className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-        <h1 className="text-2xl font-bold">🍴 Golden Essence</h1>
-        <ul className="hidden md:flex space-x-8">
-          <li><Link to="/Homepage1" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Home</Link></li>
-          <li><Link to="/Menu1" className="flex items-center gap-2 font-medium hover:text-amber-200 transition">Menu</Link></li>
-        </ul>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => window.history.back()}
-            className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded font-semibold transition"
-          >
-            ← Back
-          </button>
-        </div>
-      </nav>
 
       <div className="w-full flex flex-col items-center py-10 px-4">
 
