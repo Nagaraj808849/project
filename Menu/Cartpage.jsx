@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
 
+  // Load cart from localStorage
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(cart);
   }, []);
 
+  // Update cart in state & localStorage
   const updateCart = (items) => {
     setCartItems(items);
     localStorage.setItem("cart", JSON.stringify(items));
@@ -35,7 +37,7 @@ function CartPage() {
     updateCart(updated);
   };
 
-  // Helper to parse price string like "₹150" to number 150
+  // Convert price string to number (₹150 → 150)
   const parsePrice = (price) => Number(price.replace(/[^0-9.-]+/g, ""));
 
   const totalAmount = cartItems.reduce(
@@ -44,16 +46,23 @@ function CartPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-white flex justify-center items-start py-10 px-4">
 
-      <div className="w-full flex flex-col items-center py-10 px-4">
+      <div className="w-full max-w-3xl">
 
-        <h1 className="text-3xl font-bold mb-6 text-center text-amber-900">🛬 Your Cart</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center text-amber-900">
+          🛒 Your Cart
+        </h1>
 
         {cartItems.length === 0 ? (
-          <p className="text-center text-gray-600 text-lg">
-            Your cart is empty
-          </p>
+          <div className="text-center bg-white p-10 rounded-xl shadow">
+            <p className="text-gray-600 text-lg">Your cart is empty</p>
+            <Link to="/">
+              <button className="mt-4 bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg">
+                Go Shopping
+              </button>
+            </Link>
+          </div>
         ) : (
           <>
             {/* Cart Items */}
@@ -65,32 +74,39 @@ function CartPage() {
                 >
                   <div>
                     <h2 className="font-medium text-lg">{item.name}</h2>
-                    <p className="text-gray-500">₹{parsePrice(item.price)}</p>
+                    <p className="text-gray-500">
+                      ₹{parsePrice(item.price)}
+                    </p>
                   </div>
 
+                  {/* Quantity Controls */}
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => decreaseQty(item.id)}
-                      className="px-3 py-1 bg-amber-200 hover:bg-amber-300 rounded transition font-semibold text-amber-900"
+                      className="px-3 py-1 bg-amber-200 hover:bg-amber-300 rounded font-semibold text-amber-900"
                     >
                       -
                     </button>
+
                     <span className="w-6 text-center">{item.qty}</span>
+
                     <button
                       onClick={() => increaseQty(item.id)}
-                      className="px-3 py-1 bg-amber-200 hover:bg-amber-300 rounded transition font-semibold text-amber-900"
+                      className="px-3 py-1 bg-amber-200 hover:bg-amber-300 rounded font-semibold text-amber-900"
                     >
                       +
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  {/* Price & Remove */}
+                  <div className="flex items-center gap-4">
                     <span className="font-semibold">
                       ₹{parsePrice(item.price) * item.qty}
                     </span>
+
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="text-red-500 hover:text-red-600 transition"
+                      className="text-red-500 hover:text-red-600"
                     >
                       Remove
                     </button>
@@ -99,15 +115,16 @@ function CartPage() {
               ))}
             </div>
 
-            {/* Total & Payment Button */}
-            <div className="mt-6 flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow">
+            {/* Total Section */}
+            <div className="mt-6 bg-white p-6 rounded-xl shadow flex flex-col md:flex-row justify-between items-center">
               <h2 className="text-xl font-bold">
                 Total: ₹{totalAmount}
               </h2>
+
               <Link to="/PaymentDetails">
-              <button className="mt-4 md:mt-0 w-full md:w-auto bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-xl font-semibold transition">
-                Proceed to Payment
-              </button>
+                <button className="mt-4 md:mt-0 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-xl font-semibold">
+                  Proceed to Payment
+                </button>
               </Link>
             </div>
           </>

@@ -1,8 +1,8 @@
 
 
 
-import { ChevronRight, ChevronLeft, UtensilsCrossed, Phone, Mail, MapPin } from "lucide-react";
-import { useRef } from "react";
+import { ChevronRight, ChevronLeft, UtensilsCrossed, Phone, Mail, MapPin, ShoppingCart, Home, Menu, HelpCircle, User, LogOut, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../src/context/useAuth";
 import { COLORS } from "../src/constants/COLORS";
@@ -13,7 +13,9 @@ export default function HomePage1() {
   const scrollRef1 = useRef(null);
   const scrollRef2 = useRef(null);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const scrollRight1 = () => {
     if (scrollRef1.current) {
@@ -75,12 +77,12 @@ export default function HomePage1() {
         }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
-        {/* navbar removed, rendered through Navbar component */}
-        {/*
+        {/* inline navbar for this page */}
+        <nav className="absolute top-0 left-0 w-full z-50 bg-gradient-to-r from-amber-50 via-amber-100 to-white backdrop-blur-md border-b border-amber-500/50 shadow-lg">
             <div className="flex justify-between items-center">
               <h1 className="text-xl sm:text-2xl font-bold text-amber-900 drop-shadow-lg">🍴 Golden Essence</h1>
               
-              // Desktop Menu
+              {/* Desktop Menu */}
               <div className="hidden md:flex items-center gap-8">
                 <ul className="flex space-x-6">
                   <li><a href="#home" className="flex items-center gap-2 text-amber-900 font-medium hover:text-amber-600 transition"><Home size={20}/> <span className="hidden lg:inline">Home</span></a></li>
@@ -95,7 +97,7 @@ export default function HomePage1() {
                 </ul>
               </div>
 
-              // Desktop Right Section
+              {/* Desktop Right Section */}
               <div className="hidden md:flex items-center gap-6">
                 <button onClick={() => handleProtectedAction("/Cart")} className="relative cursor-pointer text-amber-900 hover:text-amber-600 transition">
                   <ShoppingCart size={24}/>
@@ -149,7 +151,7 @@ export default function HomePage1() {
                 )}
               </div>
 
-              // Mobile Menu Button
+              {/* Mobile Menu Button */}
               <div className="md:hidden flex items-center gap-4">
                 <button onClick={() => handleProtectedAction("/Cart")} className="text-amber-900 hover:text-amber-600 transition">
                   <ShoppingCart size={22}/>
@@ -163,10 +165,10 @@ export default function HomePage1() {
               </div>
             </div>
 
-            // Mobile Menu
+            {/* Mobile Menu */}
             {mobileNavOpen && (
               <div className="md:hidden mt-4 pb-6 border-t border-amber-600/30 pt-6 animate-in fade-in slide-in-from-top-2">
-                // Mobile Navigation Links
+                {/* Mobile Navigation Links */}
                 <ul className="space-y-1 mb-6">
                   <li>
                     <a 
@@ -217,10 +219,10 @@ export default function HomePage1() {
                   </li>
                 </ul>
 
-                // Mobile Divider
+                {/* Mobile Divider */}
                 <div className="h-px bg-amber-600/30 my-4"></div>
 
-                // Mobile User Section
+                {/* Mobile User Section */}
                 {user ? (
                   <div className="space-y-2">
                     <div className="bg-amber-600/10 p-3 rounded-lg mb-3">
@@ -259,8 +261,7 @@ export default function HomePage1() {
                 )}
               </div>
             )}
-          </div>
-        */}
+        </nav>
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white">
           <h2 className="text-5xl font-extrabold drop-shadow-lg">Welcome to Golden Essence</h2>
           <p className="mt-4 text-lg">A taste of prestige, plated in perfection</p>
@@ -401,7 +402,7 @@ export default function HomePage1() {
               <a href="#" className="hover:text-amber-400 transition">Sitemap</a>
             </div>
           </div>
-        </div>
+        </div>7
       </footer>
     </div>
   );

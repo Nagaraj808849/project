@@ -11,8 +11,6 @@ import PaymentPage from '../Payment/PaymentDetails.jsx'
 import UserDash from '../UserDash/UserDash.jsx'
 import Admin from '../AbminDash/Admin.jsx'
 import Homepage1 from '../Home/HomePage1.jsx'
-import Navbar from './components/Navbar';
-import { useLocation } from 'react-router-dom';
 import Menu1 from '../Menu/Menu1.jsx'
 import CartPage from '../Menu/Cartpage.jsx'
 import { AuthProvider } from './context/AuthContext'
@@ -22,19 +20,13 @@ import { ProtectedRoute } from './context/ProtectedRoute'
 function App() {
   const [count, setCount] = useState(0)
 
-  // wrapper so we can call useLocation inside Router
-  function NavbarWrapper() {
-    const location = useLocation();
-    // hide navbar only on base landing page
-    return location.pathname !== "/" ? <Navbar /> : null;
-  }
+  // Navbar component removed — navigation will be handled per-page if needed
 
   return (
     <>
       <AuthProvider>
         <Router>
-          <NavbarWrapper />
-          <Routes>
+            <Routes>
             <Route path='/' element={<Frontpage />} />
             <Route path='/Login' element={<Login />} />
             <Route path='/Signup' element={<Signup />} />
