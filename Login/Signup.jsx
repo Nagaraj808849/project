@@ -1,24 +1,8 @@
-/**
- * 📝 SIGNUP COMPONENT - GOLDEN ESSENCE RESTAURANT
- * 
- * COLOR SCHEME: Dark Theme with Gold Accents
- * - Page Background: min-h-screen bg-gradient-to-br from-slate-900 to-slate-800
- * - Form Container: bg-slate-900 with border-amber-500
- * - Input Fields: bg-transparent, border-b border-slate-600, focus:border-amber-400
- * - Icons: text-amber-400
- * - Buttons: from-amber-600 to-amber-500, hover:from-amber-700 hover:to-amber-600
- * - Left Panel: from-amber-600 to-amber-700
- * 
- * Color values defined in: src/constants/COLORS.js
- *
- * ✅ IMPLEMENTATION STATUS: ✨ COHESIVE AUTH EXPERIENCE
- */
 
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { useAuth } from "../src/context/useAuth";
-import { COLORS } from "../src/constants/COLORS";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -32,24 +16,20 @@ const Signup = () => {
     confirmPassword: "",
   });
 
-  // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/Homepage1");
     }
   }, [isAuthenticated, navigate]);
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
 
-  // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation
     if (!formData.username || !formData.email || !formData.password) {
       setError("All fields are required");
       return;
@@ -84,17 +64,14 @@ const Signup = () => {
         <div className="w-[850px] h-[500px] flex rounded-lg shadow-2xl relative overflow-hidden border border-amber-400">
         <div className="absolute inset-0 bg-gradient-to-r from-amber-400/30 to-amber-600/30 blur-2xl"></div>
 
-        {/* Left Side */}
         <div className="w-1/2 bg-gradient-to-br from-amber-500 to-amber-600 text-white flex flex-col justify-center items-center p-8 relative z-10">
           <h2 className="text-3xl font-extrabold">WELCOME</h2>
         </div>
 
-        {/* Right Side */}
         <div className="w-1/2 bg-white flex flex-col justify-center p-10 relative z-10">
           <h2 className="text-2xl font-semibold mb-6 text-amber-900">Sign Up</h2>
 
           <form className="space-y-6 text-gray-800" onSubmit={handleSubmit}>
-            {/* Username */}
             <div className="relative">
               <input
                 type="text"
@@ -108,7 +85,6 @@ const Signup = () => {
               <FaUser className="absolute left-2 top-3 text-gray-400" />
             </div>
 
-            {/* Email */}
             <div className="relative">
               <input
                 type="email"
@@ -150,7 +126,6 @@ const Signup = () => {
               <FaLock className="absolute left-2 top-3 text-gray-400" />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition font-semibold text-white"
