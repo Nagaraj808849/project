@@ -60,7 +60,7 @@ const Signup = () => {
         }
       );
 
-      alert(response.data);
+      alert(response.data.message);
       navigate("/Login");
     } catch (err) {
       console.error(err);

@@ -46,26 +46,29 @@ const Login = () => {
         }
       );
 
-      const user = response.data;
+      const data = response.data;
 
-      // Save user
-      localStorage.setItem("currentUser", JSON.stringify(user));
+      // Save JWT token
+      localStorage.setItem("token", data.token);
 
-      // Update context
-      login(user);
+      // Save role
+      localStorage.setItem("role", data.role);
 
-      // Redirect by role
-      if (user.role && user.role.toLowerCase() === "admin") {
-        navigate("/Admin");
+      // Store user/token in AuthContext
+      login(data);
+
+      // Role based navigation
+      if (Number(data.role) === 1) {
+        navigate("/Admin"); // Admin Dashboard
       } else {
-        navigate("/Homepage1");
+        navigate("/Homepage1"); // User Homepage
       }
 
     } catch (err) {
       console.error("Login Error:", err);
 
       if (err.response) {
-        setError(err.response.data || "Invalid Email or Password");
+        setError(err.response.data.message || "Invalid Email or Password");
       } else {
         setError("Cannot connect to server");
       }
@@ -81,7 +84,6 @@ const Login = () => {
         <div className="w-[850px] h-[500px] flex rounded-lg shadow-2xl border border-amber-400">
 
           {/* LEFT SIDE LOGIN FORM */}
-
           <div className="w-1/2 bg-white flex flex-col justify-center p-10">
 
             <h2 className="text-2xl font-semibold mb-6 text-amber-900">
@@ -91,7 +93,6 @@ const Login = () => {
             <form className="space-y-6 text-gray-800" onSubmit={handleSubmit}>
 
               {/* Email */}
-
               <div className="relative">
                 <input
                   type="email"
@@ -107,7 +108,6 @@ const Login = () => {
               </div>
 
               {/* Password */}
-
               <div className="relative">
                 <input
                   type="password"
@@ -123,7 +123,6 @@ const Login = () => {
               </div>
 
               {/* Login Button */}
-
               <button
                 type="submit"
                 disabled={loading}
@@ -132,13 +131,13 @@ const Login = () => {
                 {loading ? "Logging in..." : "Login"}
               </button>
 
-              {/* Error message */}
-
+              {/* Error Message */}
               {error && (
                 <p className="mt-2 text-red-500 text-sm text-center">
                   {error}
                 </p>
               )}
+
             </form>
 
             <p className="mt-4 text-sm text-gray-600 text-center">
@@ -154,7 +153,6 @@ const Login = () => {
           </div>
 
           {/* RIGHT SIDE WELCOME */}
-
           <div className="w-1/2 bg-gradient-to-br from-amber-500 to-amber-600 text-white flex flex-col justify-center items-center p-8">
 
             <h2 className="text-3xl font-extrabold">

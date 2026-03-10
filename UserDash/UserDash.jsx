@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { LayoutDashboard, ClipboardList, LogOut, User } from "lucide-react";
 
 export default function UserDash() {
+
   const [active, setActive] = useState("dashboard");
   const [loggedIn, setLoggedIn] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
   const [showBigImage, setShowBigImage] = useState(false);
 
   const [profile, setProfile] = useState({
-    name: "User Name",
-    email: "user@email.com",
+    name: "",
+    email: "",
     photo: null,
   });
 
@@ -37,6 +38,30 @@ export default function UserDash() {
     },
   ]);
 
+  // ===============================
+  // LOAD USER FROM LOCAL STORAGE
+  // ===============================
+
+  useEffect(() => {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+
+      setProfile({
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        photo: null
+      });
+
+    }
+
+  }, []);
+
+  // ===============================
+  // FILTER USER ORDERS
+  // ===============================
+
   const myOrders = allOrders.filter(
     (order) => order.userEmail === profile.email
   );
@@ -46,42 +71,74 @@ export default function UserDash() {
     0
   );
 
-  // 🔁 Auto status change every 1 minute
+  // ===============================
+  // AUTO ORDER STATUS UPDATE
+  // ===============================
+
   useEffect(() => {
+
     const interval = setInterval(() => {
+
       setAllOrders((prev) =>
         prev.map((order) => {
+
           if (order.status === "Pending") {
             return { ...order, status: "Preparing" };
           }
+
           if (order.status === "Preparing") {
             return { ...order, status: "Served" };
           }
+
           return order;
+
         })
       );
+
     }, 60000);
 
     return () => clearInterval(interval);
+
   }, []);
 
+  // ===============================
+  // PROFILE IMAGE UPLOAD
+  // ===============================
+
   const handlePhotoChange = (e) => {
+
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     const reader = new FileReader();
+
     reader.onloadend = () => {
+
       setProfile((prev) => ({
         ...prev,
         photo: reader.result,
       }));
+
     };
+
     reader.readAsDataURL(file);
+
   };
 
   const handleSaveProfile = () => {
+
     setSuccessMessage("Profile Updated Successfully ✅");
+
     setTimeout(() => setSuccessMessage(""), 3000);
+
+  };
+
+  const handleLogout = () => {
+
+    localStorage.clear();
+    setLoggedIn(false);
+
   };
 
   if (!loggedIn) {
@@ -99,8 +156,11 @@ export default function UserDash() {
 
   return (
     <div className="flex h-screen bg-orange-50 relative">
-      {/* Sidebar */}
+
+      {/* SIDEBAR */}
+
       <div className="w-64 bg-white shadow-lg text-gray-700 flex flex-col p-5 space-y-6">
+
         <h1 className="text-2xl font-bold text-orange-500">
           Restaurant Panel
         </h1>
@@ -139,61 +199,83 @@ export default function UserDash() {
         </button>
 
         <button
-          onClick={() => setLoggedIn(false)}
+          onClick={handleLogout}
           className="flex items-center gap-2 p-2 rounded-xl text-red-400 mt-auto hover:bg-red-50"
         >
           <LogOut size={18} /> Logout
         </button>
+
       </div>
 
-      {/* Main Content */}
+      {/* MAIN CONTENT */}
+
       <div className="flex-1 p-8 overflow-y-auto">
+
         {active === "dashboard" && (
+
           <div>
+
             <h2 className="text-3xl font-bold text-orange-600 mb-6">
               Welcome, {profile.name}
             </h2>
 
             <div className="bg-white rounded-2xl shadow p-6">
+
               <h3 className="text-lg font-semibold text-gray-600">
                 My Total Expense
               </h3>
+
               <p className="text-3xl font-bold text-orange-500 mt-2">
                 ₹{totalExpense}
               </p>
+
             </div>
+
           </div>
+
         )}
 
         {active === "orders" && (
+
           <div>
+
             <h2 className="text-3xl font-bold text-orange-600 mb-6">
               My Orders
             </h2>
 
             <div className="space-y-4">
+
               {myOrders.length === 0 ? (
                 <p>No Orders Found</p>
               ) : (
+
                 myOrders.map((order) => (
+
                   <div
                     key={order.id}
                     className="bg-white rounded-2xl shadow p-6 flex justify-between"
                   >
+
                     <div>
-                      <p className="font-semibold">Order #{order.id}</p>
+
+                      <p className="font-semibold">
+                        Order #{order.id}
+                      </p>
+
                       <p className="text-sm text-gray-600">
                         Items: {order.items}
                       </p>
+
                       <p className="text-sm text-gray-600">
                         Amount: ₹{order.amount}
                       </p>
+
                     </div>
 
                     <span
-                      className={`px-6 py-3 rounded-full text-sm font-semibold flex items-center justify-center ${
+                      className={`px-6 py-3 rounded-full text-sm font-semibold ${
                         order.status === "Pending"
-                          ? "bg-yellow-100 py-4 text-blue-700"
+                          ? "bg-yellow-100 text-yellow-700"
                           : order.status === "Preparing"
                           ? "bg-blue-100 text-blue-700"
                           : "bg-green-100 text-green-700"
@@ -201,46 +283,58 @@ export default function UserDash() {
                     >
                       {order.status}
                     </span>
+
                   </div>
+
                 ))
+
               )}
+
             </div>
+
           </div>
+
         )}
 
         {active === "profile" && (
+
           <div>
+
             <h2 className="text-3xl font-bold text-orange-600 mb-6">
               User Profile
             </h2>
 
             <div className="bg-white rounded-2xl shadow max-w-xl p-6 space-y-4">
+
               <div className="flex flex-col items-center gap-4">
+
                 <img
                   src={profile.photo || "https://via.placeholder.com/120"}
                   alt="Profile"
                   onClick={() => setShowBigImage(true)}
                   className="w-28 h-28 rounded-full object-cover border cursor-pointer"
                 />
-                <input type="file" accept="image/*" onChange={handlePhotoChange} />
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                />
+
               </div>
 
               <input
                 type="text"
                 value={profile.name}
-                onChange={(e) =>
-                  setProfile({ ...profile, name: e.target.value })
-                }
-                className="w-full p-2 border rounded-xl"
+                readOnly
+                className="w-full p-2 border rounded-xl bg-gray-100"
               />
 
               <input
                 type="email"
                 value={profile.email}
-                onChange={(e) =>
-                  setProfile({ ...profile, email: e.target.value })
-                }
-                className="w-full p-2 border rounded-xl"
+                readOnly
+                className="w-full p-2 border rounded-xl bg-gray-100"
               />
 
               <button
@@ -255,14 +349,21 @@ export default function UserDash() {
                   {successMessage}
                 </p>
               )}
+
             </div>
+
           </div>
+
         )}
+
       </div>
 
-      {/* Big Image Modal with Back Button */}
+      {/* BIG IMAGE VIEW */}
+
       {showBigImage && (
-        <div className="fixed inset-0 bg-opacity-150 flex flex-col items-center justify-center">
+
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-40">
+
           <img
             src={profile.photo || "https://via.placeholder.com/250"}
             alt="Big Profile"
@@ -275,8 +376,11 @@ export default function UserDash() {
           >
             Back
           </button>
+
         </div>
+
       )}
+
     </div>
   );
 }

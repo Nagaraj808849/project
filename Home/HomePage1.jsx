@@ -360,15 +360,7 @@ export default function HomePage1() {
             </div>
 
             {/* Quick Links */}
-            <div>
-              <h4 className="text-xl font-semibold text-amber-500 mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><Link to="/" className="hover:text-amber-400 transition">Home</Link></li>
-                <li><Link to="/Menu1" className="hover:text-amber-400 transition">Menu</Link></li>
-                <li><Link to="/TableOrder" className="hover:text-amber-400 transition">Book Table</Link></li>
-                <li><Link to="/UserDash" className="hover:text-amber-400 transition">Dashboard</Link></li>
-              </ul>
-            </div>
+           
 
             {/* Contact Info */}
             <div>
